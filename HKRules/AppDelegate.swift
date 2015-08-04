@@ -26,8 +26,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Parse.setApplicationId("q0zDsAFXiBtK2FFHMwBnsqWvqsNBZcJJy3GFL9xa",
             clientKey: "YCaxY5KPgHdrGLZoUUwReGIyqEyAtAVFc0r0Mkb3")
         
+        // Register for Push Notitications
+        if application.respondsToSelector("registerUserNotificationSettings:") {
+            let userNotificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound
+            let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: nil)
+            application.registerUserNotificationSettings(settings)
+            application.registerForRemoteNotifications()
+        }
+        
         return true
     }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        let installation = PFInstallation.currentInstallation()
+        installation.setDeviceTokenFromData(deviceToken)
+        installation.saveInBackgroundWithBlock({ (success: Bool, error: NSError?) -> Void in
+            if !success {
+                println("IN AppDelegate.swift FUNCTION application: didRegisterForRemoteNotificationsWithDeviceToken")
+            }
+        })
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        if error.code == 3010 {
+            println("Push notifications are not supported in the iOS Simulator.")
+        } else {
+            println("application:didFailToRegisterForRemoteNotificationsWithError: %@", error)
+        }
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        println("notification")
+        if let soundAlarm = userInfo["soundAlarm"] {
+            let nsWavPath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alarm.wav")
+            let url = NSURL(fileURLWithPath: nsWavPath)
+            println(HKWControlHandler.sharedInstance().playWAV(nsWavPath))
+            println(nsWavPath)
+            var timer = NSTimer(timeInterval: 10, target: self, selector: "stop", userInfo: nil, repeats: false)
+        }
+        completionHandler(UIBackgroundFetchResult.NewData)
+    }
+    
+    func stop() {
+        println("stopped")
+        HKWControlHandler.sharedInstance().stop()
+    }
+    
+//    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+//        PFPush.handlePush(userInfo)
+//    }
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

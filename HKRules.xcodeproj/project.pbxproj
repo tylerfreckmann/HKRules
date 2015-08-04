@@ -7,8 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F8E4D00B1B6FDE8F00D4255B /* libHKWirelessHD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E4D0081B6FDE8F00D4255B /* libHKWirelessHD.a */; };
+		F8E4D00C1B6FDE8F00D4255B /* License-iOS-Omni.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F8E4D0091B6FDE8F00D4255B /* License-iOS-Omni.pdf */; };
+		F8E4D00D1B6FDE8F00D4255B /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D00A1B6FDE8F00D4255B /* README.md */; };
+		F8E4D00F1B6FDEEC00D4255B /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E4D00E1B6FDEEC00D4255B /* libbz2.dylib */; };
+		F8E4D0121B6FE3E800D4255B /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D0111B6FE3E800D4255B /* GlobalConstants.swift */; };
+		F8E4D0161B6FF2EC00D4255B /* alarm.wav in Resources */ = {isa = PBXBuildFile; fileRef = F8E4D0151B6FF2EC00D4255B /* alarm.wav */; };
+		F8E4D01A1B71512500D4255B /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E4D0191B71512500D4255B /* MediaPlayer.framework */; };
 		F8F5AA7E1B69B370002E84D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AA7D1B69B370002E84D8 /* AppDelegate.swift */; };
-		F8F5AA801B69B370002E84D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AA7F1B69B370002E84D8 /* ViewController.swift */; };
+		F8F5AA801B69B370002E84D8 /* LogInSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AA7F1B69B370002E84D8 /* LogInSignUpViewController.swift */; };
 		F8F5AA831B69B370002E84D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8F5AA811B69B370002E84D8 /* Main.storyboard */; };
 		F8F5AA851B69B370002E84D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8F5AA841B69B370002E84D8 /* Images.xcassets */; };
 		F8F5AA881B69B370002E84D8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = F8F5AA861B69B370002E84D8 /* LaunchScreen.xib */; };
@@ -24,6 +31,9 @@
 		F8F5AAB11B69B515002E84D8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8F5AAA81B69B515002E84D8 /* QuartzCore.framework */; };
 		F8F5AAB21B69B515002E84D8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8F5AAA91B69B515002E84D8 /* Security.framework */; };
 		F8F5AAB31B69B515002E84D8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8F5AAAA1B69B515002E84D8 /* SystemConfiguration.framework */; };
+		F8F5AAB51B6A8F85002E84D8 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AAB41B6A8F85002E84D8 /* LogInViewController.swift */; };
+		F8F5AAB71B6A90F2002E84D8 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AAB61B6A90F2002E84D8 /* SignUpViewController.swift */; };
+		F8F5AAB91B6AF476002E84D8 /* WakeUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AAB81B6AF476002E84D8 /* WakeUpViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,10 +47,23 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F8E4D0021B6FDE8F00D4255B /* DeviceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceGroup.h; sourceTree = "<group>"; };
+		F8E4D0031B6FDE8F00D4255B /* DeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceInfo.h; sourceTree = "<group>"; };
+		F8E4D0041B6FDE8F00D4255B /* HKWControlHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKWControlHandler.h; sourceTree = "<group>"; };
+		F8E4D0051B6FDE8F00D4255B /* HKWDeviceEventHandlerSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKWDeviceEventHandlerSingleton.h; sourceTree = "<group>"; };
+		F8E4D0061B6FDE8F00D4255B /* HKWPlayerEventHandlerSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKWPlayerEventHandlerSingleton.h; sourceTree = "<group>"; };
+		F8E4D0081B6FDE8F00D4255B /* libHKWirelessHD.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libHKWirelessHD.a; sourceTree = "<group>"; };
+		F8E4D0091B6FDE8F00D4255B /* License-iOS-Omni.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "License-iOS-Omni.pdf"; sourceTree = "<group>"; };
+		F8E4D00A1B6FDE8F00D4255B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		F8E4D00E1B6FDEEC00D4255B /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
+		F8E4D0101B6FDF8B00D4255B /* HKRules-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HKRules-Bridging-Header.h"; sourceTree = "<group>"; };
+		F8E4D0111B6FE3E800D4255B /* GlobalConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalConstants.swift; sourceTree = "<group>"; };
+		F8E4D0151B6FF2EC00D4255B /* alarm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = alarm.wav; sourceTree = "<group>"; };
+		F8E4D0191B71512500D4255B /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		F8F5AA781B69B370002E84D8 /* HKRules.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HKRules.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8F5AA7C1B69B370002E84D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8F5AA7D1B69B370002E84D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F8F5AA7F1B69B370002E84D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F8F5AA7F1B69B370002E84D8 /* LogInSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInSignUpViewController.swift; sourceTree = "<group>"; };
 		F8F5AA821B69B370002E84D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F8F5AA841B69B370002E84D8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F8F5AA871B69B370002E84D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -58,6 +81,9 @@
 		F8F5AAA81B69B515002E84D8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F8F5AAA91B69B515002E84D8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		F8F5AAAA1B69B515002E84D8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		F8F5AAB41B6A8F85002E84D8 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		F8F5AAB61B6A90F2002E84D8 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		F8F5AAB81B6AF476002E84D8 /* WakeUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WakeUpViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +91,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8E4D01A1B71512500D4255B /* MediaPlayer.framework in Frameworks */,
+				F8E4D00F1B6FDEEC00D4255B /* libbz2.dylib in Frameworks */,
+				F8E4D00B1B6FDE8F00D4255B /* libHKWirelessHD.a in Frameworks */,
 				F8F5AAAB1B69B515002E84D8 /* AudioToolbox.framework in Frameworks */,
 				F8F5AAAC1B69B515002E84D8 /* CFNetwork.framework in Frameworks */,
 				F8F5AAAD1B69B515002E84D8 /* CoreGraphics.framework in Frameworks */,
@@ -89,9 +118,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F8E4D0001B6FDE8F00D4255B /* HKWirelessHDSDK */ = {
+			isa = PBXGroup;
+			children = (
+				F8E4D0011B6FDE8F00D4255B /* include */,
+				F8E4D0071B6FDE8F00D4255B /* lib */,
+				F8E4D0091B6FDE8F00D4255B /* License-iOS-Omni.pdf */,
+				F8E4D00A1B6FDE8F00D4255B /* README.md */,
+			);
+			path = HKWirelessHDSDK;
+			sourceTree = "<group>";
+		};
+		F8E4D0011B6FDE8F00D4255B /* include */ = {
+			isa = PBXGroup;
+			children = (
+				F8E4D0021B6FDE8F00D4255B /* DeviceGroup.h */,
+				F8E4D0031B6FDE8F00D4255B /* DeviceInfo.h */,
+				F8E4D0041B6FDE8F00D4255B /* HKWControlHandler.h */,
+				F8E4D0051B6FDE8F00D4255B /* HKWDeviceEventHandlerSingleton.h */,
+				F8E4D0061B6FDE8F00D4255B /* HKWPlayerEventHandlerSingleton.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		F8E4D0071B6FDE8F00D4255B /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				F8E4D0081B6FDE8F00D4255B /* libHKWirelessHD.a */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
 		F8F5AA6F1B69B370002E84D8 = {
 			isa = PBXGroup;
 			children = (
+				F8E4D0001B6FDE8F00D4255B /* HKWirelessHDSDK */,
 				F8F5AA7A1B69B370002E84D8 /* HKRules */,
 				F8F5AA901B69B370002E84D8 /* HKRulesTests */,
 				F8F5AA791B69B370002E84D8 /* Products */,
@@ -112,11 +173,16 @@
 			isa = PBXGroup;
 			children = (
 				F8F5AA7D1B69B370002E84D8 /* AppDelegate.swift */,
-				F8F5AA7F1B69B370002E84D8 /* ViewController.swift */,
+				F8F5AA7F1B69B370002E84D8 /* LogInSignUpViewController.swift */,
 				F8F5AA811B69B370002E84D8 /* Main.storyboard */,
 				F8F5AA841B69B370002E84D8 /* Images.xcassets */,
 				F8F5AA861B69B370002E84D8 /* LaunchScreen.xib */,
 				F8F5AA7B1B69B370002E84D8 /* Supporting Files */,
+				F8F5AAB41B6A8F85002E84D8 /* LogInViewController.swift */,
+				F8F5AAB61B6A90F2002E84D8 /* SignUpViewController.swift */,
+				F8F5AAB81B6AF476002E84D8 /* WakeUpViewController.swift */,
+				F8E4D0101B6FDF8B00D4255B /* HKRules-Bridging-Header.h */,
+				F8E4D0111B6FE3E800D4255B /* GlobalConstants.swift */,
 			);
 			path = HKRules;
 			sourceTree = "<group>";
@@ -124,6 +190,7 @@
 		F8F5AA7B1B69B370002E84D8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F8E4D0151B6FF2EC00D4255B /* alarm.wav */,
 				F8F5AA7C1B69B370002E84D8 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -149,6 +216,8 @@
 		F8F5AA9D1B69B3BE002E84D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F8E4D0191B71512500D4255B /* MediaPlayer.framework */,
+				F8E4D00E1B6FDEEC00D4255B /* libbz2.dylib */,
 				F8F5AAA21B69B515002E84D8 /* AudioToolbox.framework */,
 				F8F5AAA31B69B515002E84D8 /* CFNetwork.framework */,
 				F8F5AAA41B69B515002E84D8 /* CoreGraphics.framework */,
@@ -213,6 +282,7 @@
 				TargetAttributes = {
 					F8F5AA771B69B370002E84D8 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 35S4M24CME;
 					};
 					F8F5AA8C1B69B370002E84D8 = {
 						CreatedOnToolsVersion = 6.4;
@@ -244,9 +314,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8E4D0161B6FF2EC00D4255B /* alarm.wav in Resources */,
 				F8F5AA831B69B370002E84D8 /* Main.storyboard in Resources */,
 				F8F5AA881B69B370002E84D8 /* LaunchScreen.xib in Resources */,
 				F8F5AA851B69B370002E84D8 /* Images.xcassets in Resources */,
+				F8E4D00C1B6FDE8F00D4255B /* License-iOS-Omni.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,8 +336,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8F5AA801B69B370002E84D8 /* ViewController.swift in Sources */,
+				F8E4D00D1B6FDE8F00D4255B /* README.md in Sources */,
+				F8F5AAB91B6AF476002E84D8 /* WakeUpViewController.swift in Sources */,
+				F8F5AA801B69B370002E84D8 /* LogInSignUpViewController.swift in Sources */,
+				F8F5AAB71B6A90F2002E84D8 /* SignUpViewController.swift in Sources */,
+				F8E4D0121B6FE3E800D4255B /* GlobalConstants.swift in Sources */,
 				F8F5AA7E1B69B370002E84D8 /* AppDelegate.swift in Sources */,
+				F8F5AAB51B6A8F85002E84D8 /* LogInViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,7 +401,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Tyler Freckmann (EKKJZLF3N4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tyler Freckmann (EKKJZLF3N4)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -369,7 +447,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Tyler Freckmann (EKKJZLF3N4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tyler Freckmann (EKKJZLF3N4)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -394,13 +473,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Tyler Freckmann (EKKJZLF3N4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tyler Freckmann (EKKJZLF3N4)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = HKRules/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HKWirelessHDSDK/lib",
+				);
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "HKRules/HKRules-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -408,13 +496,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Tyler Freckmann (EKKJZLF3N4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tyler Freckmann (EKKJZLF3N4)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = HKRules/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HKWirelessHDSDK/lib",
+				);
+				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "HKRules/HKRules-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -471,6 +568,7 @@
 				F8F5AA991B69B370002E84D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F8F5AA9A1B69B370002E84D8 /* Build configuration list for PBXNativeTarget "HKRulesTests" */ = {
 			isa = XCConfigurationList;
@@ -479,6 +577,7 @@
 				F8F5AA9C1B69B370002E84D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
