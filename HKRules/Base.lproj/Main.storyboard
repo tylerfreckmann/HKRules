@@ -241,6 +241,9 @@
                                 <state key="normal" title="Choose Alarm Sound">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="chooseAlarmSound:" destination="ITx-2k-0jM" eventType="touchUpInside" id="zVM-3J-GYe"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

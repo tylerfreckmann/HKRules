@@ -20,6 +20,8 @@ class WakeUpViewController: UIViewController, MPMediaPickerControllerDelegate {
         // Do any additional setup after loading the view.
         mediaPicker.delegate = self
         mediaPicker.allowsPickingMultipleItems = false
+        mediaPicker.showsCloudItems = false
+        mediaPicker.prompt = "Choose Alarm Song"
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,6 +39,10 @@ class WakeUpViewController: UIViewController, MPMediaPickerControllerDelegate {
             let test = response as? String
             println(test)
         }
+    }
+    
+    @IBAction func chooseAlarmSound(sender: UIButton) {
+        self.presentViewController(mediaPicker, animated: true, completion: nil)
     }
     
     func mediaPicker(mediaPicker: MPMediaPickerController!, didPickMediaItems mediaItemCollection: MPMediaItemCollection!) {
