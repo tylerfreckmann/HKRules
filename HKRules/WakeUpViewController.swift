@@ -10,18 +10,17 @@ import UIKit
 import Parse
 import MediaPlayer
 
-class WakeUpViewController: UIViewController, MPMediaPickerControllerDelegate {
+class WakeUpViewController: UIViewController, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var datePicker: UIDatePicker!
-    var mediaPicker = MPMediaPickerController(mediaTypes: MPMediaType.Music)
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        mediaPicker.delegate = self
-        mediaPicker.allowsPickingMultipleItems = false
-        mediaPicker.showsCloudItems = false
-        mediaPicker.prompt = "Choose Alarm Song"
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,17 +40,34 @@ class WakeUpViewController: UIViewController, MPMediaPickerControllerDelegate {
         }
     }
     
-    @IBAction func chooseAlarmSound(sender: UIButton) {
-        self.presentViewController(mediaPicker, animated: true, completion: nil)
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 4
     }
     
-    func mediaPicker(mediaPicker: MPMediaPickerController!, didPickMediaItems mediaItemCollection: MPMediaItemCollection!) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-        // UPDATE PLAYER QUEUE
-    }
-    
-    func mediaPickerDidCancel(mediaPicker: MPMediaPickerController!) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var optionalCell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell?
+        if optionalCell == nil {
+            optionalCell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "cell")
+        }
+        var cell = optionalCell!
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = "Standard Alarm"
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+        case 1:
+            cell.textLabel?.text = "Song"
+            if selectedSong != nil && tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))?.accessoryType != UITableViewCellAccessoryType.Checkmark {
+                cell.detailTextLabel?.text = selectedSong?.title
+            }
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+        case 2:
+            cell.textLabel?.text = "Standard Alarm"
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+        default:
+            cell.textLabel?.text = "Standard Alarm"
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+        }
+        return cell
     }
     
     /*
