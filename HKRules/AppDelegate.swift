@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         installation.setDeviceTokenFromData(deviceToken)
         installation.saveInBackgroundWithBlock({ (success: Bool, error: NSError?) -> Void in
             if !success {
-                println("IN AppDelegate.swift FUNCTION application: didRegisterForRemoteNotificationsWithDeviceToken")
+                println("IN AppDelegate FUNCTION application: didRegisterForRemoteNotificationsWithDeviceToken" + error!.localizedDescription)
             }
         })
     }
@@ -57,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         println("notification")
-        if let soundAlarm = userInfo["soundAlarm"] {
+        if let soundAlarm: AnyObject = userInfo["soundAlarm"] {
             let nsWavPath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alarm.wav")
             let url = NSURL(fileURLWithPath: nsWavPath)
             println(HKWControlHandler.sharedInstance().playWAV(nsWavPath))

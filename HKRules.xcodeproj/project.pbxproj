@@ -14,6 +14,8 @@
 		F8E4D0121B6FE3E800D4255B /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D0111B6FE3E800D4255B /* GlobalConstants.swift */; };
 		F8E4D0161B6FF2EC00D4255B /* alarm.wav in Resources */ = {isa = PBXBuildFile; fileRef = F8E4D0151B6FF2EC00D4255B /* alarm.wav */; };
 		F8E4D01A1B71512500D4255B /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E4D0191B71512500D4255B /* MediaPlayer.framework */; };
+		F8E4D01C1B7297BF00D4255B /* ChooseSoundTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D01B1B7297BF00D4255B /* ChooseSoundTableViewController.swift */; };
+		F8E4D01E1B72A94100D4255B /* CustomTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D01D1B72A94100D4255B /* CustomTextViewController.swift */; };
 		F8F5AA7E1B69B370002E84D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AA7D1B69B370002E84D8 /* AppDelegate.swift */; };
 		F8F5AA801B69B370002E84D8 /* LogInSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AA7F1B69B370002E84D8 /* LogInSignUpViewController.swift */; };
 		F8F5AA831B69B370002E84D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8F5AA811B69B370002E84D8 /* Main.storyboard */; };
@@ -60,6 +62,8 @@
 		F8E4D0111B6FE3E800D4255B /* GlobalConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalConstants.swift; sourceTree = "<group>"; };
 		F8E4D0151B6FF2EC00D4255B /* alarm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = alarm.wav; sourceTree = "<group>"; };
 		F8E4D0191B71512500D4255B /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		F8E4D01B1B7297BF00D4255B /* ChooseSoundTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseSoundTableViewController.swift; sourceTree = "<group>"; };
+		F8E4D01D1B72A94100D4255B /* CustomTextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTextViewController.swift; sourceTree = "<group>"; };
 		F8F5AA781B69B370002E84D8 /* HKRules.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HKRules.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8F5AA7C1B69B370002E84D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8F5AA7D1B69B370002E84D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -183,6 +187,8 @@
 				F8F5AAB81B6AF476002E84D8 /* WakeUpViewController.swift */,
 				F8E4D0101B6FDF8B00D4255B /* HKRules-Bridging-Header.h */,
 				F8E4D0111B6FE3E800D4255B /* GlobalConstants.swift */,
+				F8E4D01B1B7297BF00D4255B /* ChooseSoundTableViewController.swift */,
+				F8E4D01D1B72A94100D4255B /* CustomTextViewController.swift */,
 			);
 			path = HKRules;
 			sourceTree = "<group>";
@@ -336,6 +342,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8E4D01E1B72A94100D4255B /* CustomTextViewController.swift in Sources */,
+				F8E4D01C1B7297BF00D4255B /* ChooseSoundTableViewController.swift in Sources */,
 				F8E4D00D1B6FDE8F00D4255B /* README.md in Sources */,
 				F8F5AAB91B6AF476002E84D8 /* WakeUpViewController.swift in Sources */,
 				F8F5AA801B69B370002E84D8 /* LogInSignUpViewController.swift in Sources */,

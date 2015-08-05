@@ -8,16 +8,50 @@
 
 import UIKit
 import Parse
-import MediaPlayer
 
-class WakeUpViewController: UIViewController, MPMediaPickerControllerDelegate, UITableViewDelegate, UITableViewDataSource {
+class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var tableView: UITableView!
+    var user: PFUser!
+    var wakeConfig: PFObject!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        // Initialize User
+        user = PFUser.currentUser()!
+        
+        // Initialize wakeConfig
+        var optionalWakeConfig: AnyObject? = user["wakeConfig"]
+        if optionalWakeConfig == nil {
+            wakeConfig = PFObject(className: "WakeConfig")
+            wakeConfig["sound"] = "alarm"
+            wakeConfig["greeting"] = ""
+            wakeConfig["weather"] = false
+            wakeConfig["lights"] = false
+            wakeConfig.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if success {
+                    self.user["wakeConfig"] = self.wakeConfig
+                    self.user.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        if !success {
+                            println("IN WakeUp FUNCTION viewDidLoad - user.save" + error!.localizedDescription)
+                        }
+                    })
+                    self.configureTable()
+                } else {
+                    println("IN WakeUp FUNCTION viewDidLoad - wakeConfig.save" + error!.localizedDescription)
+                }
+            })
+        } else {
+            wakeConfig = optionalWakeConfig as! PFObject
+            wakeConfig.fetch()
+            configureTable()
+        }
+    }
+    
+    func configureTable() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.reloadData()
@@ -26,6 +60,91 @@ class WakeUpViewController: UIViewController, MPMediaPickerControllerDelegate, U
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 4
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var optionalCell: AnyObject? = tableView.dequeueReusableCellWithIdentifier("cell")
+        var cell: UITableViewCell
+        if optionalCell == nil {
+            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
+        } else {
+            cell = optionalCell as! UITableViewCell
+        }
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = "Choose Alarm Sound"
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+        case 1:
+            cell.textLabel?.text = "Customized Greeting"
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+        case 2:
+            cell.textLabel?.text = "Weather Update"
+            println("HERE")
+            println(wakeConfig["weather"])
+            var weather = wakeConfig["weather"] as! Bool?
+            if weather == nil || !weather! {
+                cell.accessoryType = UITableViewCellAccessoryType.None
+            } else {
+                cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+            }
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+        default:
+            cell.textLabel?.text = "Turn on Lights"
+            var lights = wakeConfig["lights"] as! Bool?
+            if lights == nil || !lights! {
+                cell.accessoryType = UITableViewCellAccessoryType.None
+            } else {
+                cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+                var token: AnyObject? = user["sttoken"]
+                if token == nil {
+                    performSegueWithIdentifier("showSmartThings", sender: nil)
+                }
+            }
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+        }
+        return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var cell = tableView.cellForRowAtIndexPath(indexPath)
+        switch indexPath.row {
+        case 0:
+            self.performSegueWithIdentifier("chooseAlarmSound", sender: nil)
+        case 1:
+            self.performSegueWithIdentifier("customText", sender: nil)
+        case 2:
+            if cell?.accessoryType == UITableViewCellAccessoryType.Checkmark {
+                cell?.accessoryType = UITableViewCellAccessoryType.None
+                wakeConfig["weather"] = false
+            } else {
+                cell?.accessoryType = UITableViewCellAccessoryType.Checkmark
+                wakeConfig["weather"] = true
+            }
+            wakeConfig.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if !success {
+                    println("IN WakeUp FUNCTION tableView: didSelectRowAtIndexPath - case 2" + error!.localizedDescription)
+                }
+            })
+        default:
+            if cell?.accessoryType == UITableViewCellAccessoryType.Checkmark {
+                cell?.accessoryType = UITableViewCellAccessoryType.None
+                wakeConfig["lights"] = false
+            } else {
+                cell?.accessoryType = UITableViewCellAccessoryType.Checkmark
+                wakeConfig["lights"] = true
+            }
+            wakeConfig.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if !success {
+                    println("IN WakeUp FUNCTION tableView: didSelectRowAtIndexPath - default" + error!.localizedDescription)
+                }
+            })
+        }
     }
     
     @IBAction func setAlarm(sender: UIButton) {
@@ -38,36 +157,6 @@ class WakeUpViewController: UIViewController, MPMediaPickerControllerDelegate, U
             let test = response as? String
             println(test)
         }
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var optionalCell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell?
-        if optionalCell == nil {
-            optionalCell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "cell")
-        }
-        var cell = optionalCell!
-        switch indexPath.row {
-        case 0:
-            cell.textLabel?.text = "Standard Alarm"
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
-        case 1:
-            cell.textLabel?.text = "Song"
-            if selectedSong != nil && tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))?.accessoryType != UITableViewCellAccessoryType.Checkmark {
-                cell.detailTextLabel?.text = selectedSong?.title
-            }
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
-        case 2:
-            cell.textLabel?.text = "Standard Alarm"
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
-        default:
-            cell.textLabel?.text = "Standard Alarm"
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
-        }
-        return cell
     }
     
     /*
