@@ -60,13 +60,14 @@ Parse.Cloud.define("showerStarted", function(request, response) {
                      
         // Push to HKRules phone
         Parse.Push.send({
-             where: pushQuery,
-             data: {
-                 "alert": "Shower ALERT",
-                 "content-available": 1,
-             },
-             push_time: alertTime
-        },  {
+            where: pushQuery,
+            data: {
+                "alert": "Shower ALERT",
+                "content-available": 1,
+                       
+            },
+            push_time: alertTime
+            },  {
             success: function() {
                  response.success("push for " + request.params.username + " scheduled.");
             },
