@@ -3,7 +3,7 @@
 express = require('express');
 app = express();
 var Buffer = require('buffer').Buffer;
-var oauth2 = require('simple-oauth2')({
+var oauth2 = require('cloud/simple-oauth2/lib/simple-oauth2.js')({
 	clientID: '04e5f073-c826-482f-a6b5-e22e7d2d61fe',
 	clientSecret: '908091ac-6690-4349-8cf1-592b970a00ec',
 	site: 'https://graph.api.smartthings.com',
