@@ -2,19 +2,6 @@
 // These two lines are required to initialize Express in Cloud Code.
 express = require('express');
 app = express();
-var Buffer = require('buffer').Buffer;
-var oauth2 = require('cloud/simple-oauth2/lib/simple-oauth2.js')({
-	clientID: '04e5f073-c826-482f-a6b5-e22e7d2d61fe',
-	clientSecret: '908091ac-6690-4349-8cf1-592b970a00ec',
-	site: 'https://graph.api.smartthings.com',
-	tokenPath: '/oauth/token',
-	authorizationPath: '/oauth/authorize'
-});
-
-var authorization_uri = oauth2.authCode.authorizeURL({
-	redirect_uri: 'http://hkrules.parseapp.com/callback',
-	scope: 'app'
-});
 
 // Global app configuration section
 app.set('views', 'cloud/views');  // Specify the folder to find templates
