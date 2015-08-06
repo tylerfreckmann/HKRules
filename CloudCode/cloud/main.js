@@ -82,3 +82,8 @@ Parse.Cloud.define("showerStarted", function(request, response) {
                    
     });
 });
+
+// Called when SmartThings token acquired
+Parse.Cloud.define("sttoken", function(request, response) {
+	response.success("sttoken");
+});
