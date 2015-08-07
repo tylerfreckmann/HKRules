@@ -3,35 +3,41 @@
 express = require('express');
 app = express();
 
+// Additional modules
+var querystring = require('querystring');
+var _ = require('underscore');
+var Buffer = require('buffer').Buffer;
+
+// SmartThings specific details, including application id and secret
+var smartThingsClientId = '04e5f073-c826-482f-a6b5-e22e7d2d61fe';
+var smartThingsClientSecret = '908091ac-6690-4349-8cf1-592b970a00ec';
+
+var oauthCallback = 'http://hkrules.parseapp.com/oauthCallback';
+
 // Global app configuration section
 app.set('views', 'cloud/views');  // Specify the folder to find templates
 app.set('view engine', 'ejs');    // Set the template engine
 app.use(express.bodyParser());    // Middleware for reading request body
 
-// This is an example of hooking up a request handler with a specific request
-// path and HTTP verb using the Express routing API.
-app.get('/hello', function(req, res) {
-	res.render('hello', { message: 'Congrats, you just set up your app!' });
+// Login with SmartThings.
+// When called, generate a request token and redirect the browser to GitHub.
+app.get('/authorize', function(req, res) {
+	res.redirect('https://graph.api.smartthings.com/oauth/authorize?response_type=code&client_id='+smartThingsClientId+'&scope=app&redirect_uri='+oauthCallback);
 });
 
-app.get('/auth', function(req, res) {
-	res.redirect(authorization_uri);
-});
-
-app.get('/callback', function(req, res) {
-	var u = new Buffer("04e5f073-c826-482f-a6b5-e22e7d2d61fe:908091ac-6690-4349-8cf1-592b970a00ec").toString('base64');
-	console.log('reached code');
+// OAuth Callback route.
+// This is intended to be accessed via redirect from SmartThings.
+app.get('/oauthCallback', function(req, res) {
+	var u = new Buffer(smartThingsClientId+':'+smartThingsClientSecret).toString('base64');
 	Parse.Cloud.httpRequest({
-		url: 'https://graph.api.smartthings.com/oauth/token?code='+req.query.code+'&grant_type=authorization_code&redirect_uri=https%3A%2F%2Fgraph.api.smartthings.com%2Foauth%2Fcallback&scope=app',
+		url: 'https://graph.api.smartthings.com/oauth/token?code='+req.query.code+'&grant_type=authorization_code&redirect_uri=https://graph.api.smartthings.com/oauth/callback&scope=app',
 		headers: {
 			'Authorization': 'Basic '+u
-		},
+		}
 	}).then(function(httpResponse) {
-		console.log(httpResponse.data['access_token']);
-		res.end();
-	}, function(httpResponse) {
-		console.log(httpResponse.text);
-		res.end();
+		console.log(httpResponse.data);
+	},function(httpResponse) {
+		console.error(httpResponse.text);
 	});
 });
 

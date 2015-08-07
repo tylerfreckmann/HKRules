@@ -87,6 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // play tts throgugh playStreamng 
             
             HKWControlHandler.sharedInstance().playStreamingMedia(alertURL as! String, withCallback: { bool in
+                println(alertURL)
                 println("Can play!")
             } )
         }
