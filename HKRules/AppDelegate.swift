@@ -35,24 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             application.registerForRemoteNotifications()
         }
         
-        
-        // Extract the notification data
-        if let notificationPayload = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? NSDictionary {
-            
-            // Create a pointer to the Photo object
-            let showerAlertURL = notificationPayload["ttsURL"] as? NSString
-            /*let targetPhoto = PFObject(withoutDataWithClassName: "Photo", objectId: "xWMyZ4YEGZ")
-            
-            // Fetch photo object
-            targetPhoto.fetchIfNeededInBackgroundWithBlock {
-                (object: PFObject?, error:NSError?) -> Void in
-                if error == nil {
-                    // Show photo view controller
-                    println("Got in here after recieiving push!")
-                }
-            }*/
-        }
-        
         // prevent from turning into background
         sleepPreventer = MMPDeepSleepPreventer()
         sleepPreventer.startPreventSleep()
