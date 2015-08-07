@@ -60,13 +60,14 @@ Parse.Cloud.define("showerStarted", function(request, response) {
                      
         // Push to HKRules phone
         Parse.Push.send({
-             where: pushQuery,
-             data: {
-                 "alert": "Shower ALERT",
-                 "content-available": 1,
-             },
-             push_time: alertTime
-        },  {
+            where: pushQuery,
+            data: {
+                "alert": "Shower ALERT",
+                "content-available": 1,
+                "ttsURL": "http://media.tts-api.com/1e07d1e1a2b5633a41c313cf724c96cd0131aef1.mp3"
+            },
+            push_time: alertTime
+            },  {
             success: function() {
                  response.success("push for " + request.params.username + " scheduled.");
             },
