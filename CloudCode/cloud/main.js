@@ -51,30 +51,42 @@ Parse.Cloud.define("showerStarted", function(request, response) {
         var alertTime = new Date();
         alertTime.getHours();
         alertTime.getMinutes();
-        alertTime.setSeconds(alertTime.getSeconds());
+        alertTime.getSeconds();
                             
         // Init the push query
         var pushQuery = new Parse.Query(Parse.Installation);
         pushQuery.equalTo("user", users[0]);
         pushQuery.equalTo("appName", "HKRules")
-                     
-        // Push to HKRules phone
-        Parse.Push.send({
-            where: pushQuery,
-            data: {
-                "alert": "Shower ALERT",
-                "content-available": 1,
-                "ttsURL": "http://media.tts-api.com/1e07d1e1a2b5633a41c313cf724c96cd0131aef1.mp3"
+                   
+        var baseSpeechURL = "http://tts-api.com/tts.mp3?q=Alert+Alert+Alert+Alert+Alert+You+have+showered+for+";
+        var concatTimeURL = baseSpeechURL.concat(request.params.timeInSeconds);
+        var ttsURL = concatTimeURL.concat("&return_url=1");
+                   
+        Parse.Cloud.httpRequest({
+            url: ttsURL,
+            success: function(httpResponse) {
+
+                // Push to HKRules phone
+                Parse.Push.send({
+                    where: pushQuery,
+                    data: {
+                        "alert": "Shower ALERT",
+                        "content-available": 1,
+                        "ttsURL":  httpResponse.text
+                    },
+                        push_time: alertTime
+                },{ success: function() {
+                    response.success("push for " + request.params.username + " scheduled.");
+                },
+                    error: function(error) {
+                    response.error("push errored");         
+                }
+                }); //end push
             },
-            push_time: alertTime
-            },  {
-            success: function() {
-                 response.success("push for " + request.params.username + " scheduled.");
-            },
-            error: function(error) {
-                 response.error("push errored");
+            error: function(httpResponse) {
+            response.error(httpResponse)
             }
-        }); //end push
+        });
                    
     },
         error: function(error) {
