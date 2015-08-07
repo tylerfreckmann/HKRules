@@ -149,6 +149,9 @@
                                 <state key="normal" title="Take a Shower">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <segue destination="pYV-L9-VaN" kind="presentation" id="hnI-t3-6qB"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hel-nn-aVj">
                                 <rect key="frame" x="257" y="307" width="86" height="30"/>
@@ -234,7 +237,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6x9-rY-8gG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3490" y="-318"/>
+            <point key="canvasLocation" x="3346" y="-422"/>
         </scene>
         <!--Choose Alarm Sound-->
         <scene sceneID="FGV-Z9-0t4">
@@ -260,7 +263,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8wU-fA-BER" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4218" y="-817"/>
+            <point key="canvasLocation" x="4176" y="-422"/>
         </scene>
         <!--Custom Text-->
         <scene sceneID="8gD-nG-BRi">
@@ -316,7 +319,57 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AdA-Sc-gob" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4218" y="-176"/>
+            <point key="canvasLocation" x="3994" y="-1194"/>
+        </scene>
+        <!--Shower-->
+        <scene sceneID="FjY-WU-QNt">
+            <objects>
+                <viewController title="Shower" id="pYV-L9-VaN" customClass="ShowerViewController" customModule="HKRules" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2gO-bP-gWI"/>
+                        <viewControllerLayoutGuide type="bottom" id="wZP-58-Kid"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dc5-e0-Fcx">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="countDownTimer" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="yhx-UT-F7j">
+                                <rect key="frame" x="0.0" y="172" width="600" height="162"/>
+                                <date key="date" timeIntervalSinceReferenceDate="460668818.71337402">
+                                    <!--2015-08-07 19:33:38 +0000-->
+                                </date>
+                                <date key="minimumDate" timeIntervalSinceReferenceDate="-978267600">
+                                    <!--1970-01-01 11:00:00 +0000-->
+                                </date>
+                            </datePicker>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3S-n5-J30">
+                                <rect key="frame" x="264" y="426" width="73" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Save">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="savedPressed:" destination="pYV-L9-VaN" eventType="touchUpInside" id="hze-pi-ruP"/>
+                                    <segue destination="AYN-3o-9v6" kind="presentation" id="5MY-z2-llM"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="yhx-UT-F7j" firstAttribute="leading" secondItem="dc5-e0-Fcx" secondAttribute="leading" id="8Gg-d1-Dgh"/>
+                            <constraint firstAttribute="trailing" secondItem="yhx-UT-F7j" secondAttribute="trailing" id="Acj-K4-v9H"/>
+                            <constraint firstItem="yhx-UT-F7j" firstAttribute="top" secondItem="2gO-bP-gWI" secondAttribute="bottom" constant="152" id="w6I-IS-fZf"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="savedBtn" destination="g3S-n5-J30" id="iWw-xb-qGB"/>
+                        <outlet property="timePicker" destination="yhx-UT-F7j" id="6fg-RU-3Ce"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ohD-Dm-Oyw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2640" y="1159"/>
         </scene>
         <!--SmartThings Authentication-->
         <scene sceneID="Hx9-Cs-OZI">
@@ -340,7 +393,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gAr-Vi-tq6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4218" y="644"/>
+            <point key="canvasLocation" x="3346" y="310"/>
         </scene>
         <!--Sign Up-->
         <scene sceneID="U5Z-Ke-d6C">
@@ -422,7 +475,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="B4C-i8-TQT"/>
-        <segue reference="2y3-mU-MYW"/>
+        <segue reference="5MY-z2-llM"/>
+        <segue reference="S0T-Xd-OYN"/>
     </inferredMetricsTieBreakers>
 </document>
