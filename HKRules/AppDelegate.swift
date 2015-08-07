@@ -13,6 +13,7 @@ import Parse
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var sleepPreventer : MMPDeepSleepPreventer!
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -52,6 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }*/
         }
         
+        // prevent from turning into background
+        sleepPreventer = MMPDeepSleepPreventer()
+        sleepPreventer.startPreventSleep()
+        
         return true
     }
     
@@ -85,8 +90,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let alertURL: AnyObject = userInfo["ttsURL"] {
             // play tts throgugh playStreamng 
-            
             HKWControlHandler.sharedInstance().playStreamingMedia(alertURL as! String, withCallback: { bool in
+                println(bool)
                 println(alertURL)
                 println("Can play!")
             } )

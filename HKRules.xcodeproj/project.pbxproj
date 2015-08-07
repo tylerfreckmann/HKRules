@@ -17,6 +17,10 @@
 		F8E4D01C1B7297BF00D4255B /* ChooseSoundTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D01B1B7297BF00D4255B /* ChooseSoundTableViewController.swift */; };
 		F8E4D01E1B72A94100D4255B /* CustomTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D01D1B72A94100D4255B /* CustomTextViewController.swift */; };
 		F8E4D0201B74285400D4255B /* ChooseScenarioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D01F1B74285400D4255B /* ChooseScenarioViewController.swift */; };
+		F8E4D0251B75199D00D4255B /* MMPSilence.wav in Resources */ = {isa = PBXBuildFile; fileRef = F8E4D0241B75199D00D4255B /* MMPSilence.wav */; };
+		F8E4D0271B7519C300D4255B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E4D0261B7519C300D4255B /* AVFoundation.framework */; };
+		F8E4D02A1B751AD800D4255B /* MMPDeepSleepPreventer.m in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D0291B751AD800D4255B /* MMPDeepSleepPreventer.m */; };
+		F8E4D02E1B7529F300D4255B /* silence.wav in Resources */ = {isa = PBXBuildFile; fileRef = F8E4D02D1B7529F300D4255B /* silence.wav */; };
 		F8F5AA7E1B69B370002E84D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AA7D1B69B370002E84D8 /* AppDelegate.swift */; };
 		F8F5AA801B69B370002E84D8 /* LogInSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AA7F1B69B370002E84D8 /* LogInSignUpViewController.swift */; };
 		F8F5AA831B69B370002E84D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8F5AA811B69B370002E84D8 /* Main.storyboard */; };
@@ -66,6 +70,11 @@
 		F8E4D01B1B7297BF00D4255B /* ChooseSoundTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseSoundTableViewController.swift; sourceTree = "<group>"; };
 		F8E4D01D1B72A94100D4255B /* CustomTextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTextViewController.swift; sourceTree = "<group>"; };
 		F8E4D01F1B74285400D4255B /* ChooseScenarioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseScenarioViewController.swift; sourceTree = "<group>"; };
+		F8E4D0241B75199D00D4255B /* MMPSilence.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = MMPSilence.wav; sourceTree = "<group>"; };
+		F8E4D0261B7519C300D4255B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		F8E4D0281B751AD800D4255B /* MMPDeepSleepPreventer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDeepSleepPreventer.h; sourceTree = "<group>"; };
+		F8E4D0291B751AD800D4255B /* MMPDeepSleepPreventer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDeepSleepPreventer.m; sourceTree = "<group>"; };
+		F8E4D02D1B7529F300D4255B /* silence.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = silence.wav; sourceTree = "<group>"; };
 		F8F5AA781B69B370002E84D8 /* HKRules.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HKRules.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8F5AA7C1B69B370002E84D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8F5AA7D1B69B370002E84D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -97,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8E4D0271B7519C300D4255B /* AVFoundation.framework in Frameworks */,
 				F8E4D01A1B71512500D4255B /* MediaPlayer.framework in Frameworks */,
 				F8E4D00F1B6FDEEC00D4255B /* libbz2.dylib in Frameworks */,
 				F8E4D00B1B6FDE8F00D4255B /* libHKWirelessHD.a in Frameworks */,
@@ -192,6 +202,8 @@
 				F8E4D01B1B7297BF00D4255B /* ChooseSoundTableViewController.swift */,
 				F8E4D01D1B72A94100D4255B /* CustomTextViewController.swift */,
 				F8E4D01F1B74285400D4255B /* ChooseScenarioViewController.swift */,
+				F8E4D0281B751AD800D4255B /* MMPDeepSleepPreventer.h */,
+				F8E4D0291B751AD800D4255B /* MMPDeepSleepPreventer.m */,
 			);
 			path = HKRules;
 			sourceTree = "<group>";
@@ -199,6 +211,8 @@
 		F8F5AA7B1B69B370002E84D8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F8E4D02D1B7529F300D4255B /* silence.wav */,
+				F8E4D0241B75199D00D4255B /* MMPSilence.wav */,
 				F8E4D0151B6FF2EC00D4255B /* alarm.wav */,
 				F8F5AA7C1B69B370002E84D8 /* Info.plist */,
 			);
@@ -225,6 +239,7 @@
 		F8F5AA9D1B69B3BE002E84D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F8E4D0261B7519C300D4255B /* AVFoundation.framework */,
 				F8E4D0191B71512500D4255B /* MediaPlayer.framework */,
 				F8E4D00E1B6FDEEC00D4255B /* libbz2.dylib */,
 				F8F5AAA21B69B515002E84D8 /* AudioToolbox.framework */,
@@ -324,10 +339,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8E4D0161B6FF2EC00D4255B /* alarm.wav in Resources */,
+				F8E4D02E1B7529F300D4255B /* silence.wav in Resources */,
 				F8F5AA831B69B370002E84D8 /* Main.storyboard in Resources */,
 				F8F5AA881B69B370002E84D8 /* LaunchScreen.xib in Resources */,
 				F8F5AA851B69B370002E84D8 /* Images.xcassets in Resources */,
 				F8E4D00C1B6FDE8F00D4255B /* License-iOS-Omni.pdf in Resources */,
+				F8E4D0251B75199D00D4255B /* MMPSilence.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,6 +372,7 @@
 				F8E4D0201B74285400D4255B /* ChooseScenarioViewController.swift in Sources */,
 				F8F5AA7E1B69B370002E84D8 /* AppDelegate.swift in Sources */,
 				F8F5AAB51B6A8F85002E84D8 /* LogInViewController.swift in Sources */,
+				F8E4D02A1B751AD800D4255B /* MMPDeepSleepPreventer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
