@@ -55,9 +55,34 @@ class ShowerViewController: UIViewController {
     
 
     @IBAction func savedPressed(sender: UIButton) {
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        var showerDuration = dateFormatter.stringFromDate(datePicker.date)
         
+        println("\(showerDuration)")
+        
+        var hoursAndMinutes = showerDuration.componentsSeparatedByString(":")
+        
+        println("\(hoursAndMinutes)")
+        
+        var hours = hoursAndMinutes[0];
+        var minutes = hoursAndMinutes[1]
+        
+        println("Hours: \(hours)")
+        println("Minutes: \(minutes)")
+        
+        var totalSecs = convertToSecs(hours.toInt()!, minutes: minutes.toInt()!)
+        println("Total seconds: \(totalSecs)")
     }
 
+    func convertToSecs(hours: Int, minutes: Int) -> Int {
+        var hoursToSec = hours * 3600
+        var minutesToSec = minutes * 60
+        
+        return hoursToSec + minutesToSec
+    
+    }
+    
 
     /*
     // MARK: - Navigation
