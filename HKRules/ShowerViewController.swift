@@ -58,29 +58,33 @@ class ShowerViewController: UIViewController {
         var dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         var showerDuration = dateFormatter.stringFromDate(datePicker.date)
-        
-        println("\(showerDuration)")
-        
         var hoursAndMinutes = showerDuration.componentsSeparatedByString(":")
-        
-        println("\(hoursAndMinutes)")
-        
-        var hours = hoursAndMinutes[0];
+        var hours = hoursAndMinutes[0]
         var minutes = hoursAndMinutes[1]
-        
-        println("Hours: \(hours)")
-        println("Minutes: \(minutes)")
-        
         var totalSecs = convertToSecs(hours.toInt()!, minutes: minutes.toInt()!)
         println("Total seconds: \(totalSecs)")
+        
+        // save shower time to the parse cloud 
+        showerConfig["timeTillAlert"] = totalSecs
+        showerConfig.saveInBackgroundWithBlock({ (success, error) -> Void in
+            if success {
+                self.user["showerConfig"] = self.showerConfig
+                self.user.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    if !success {
+                        println("IN shower FUNCTION savePressed- user.save" + error!.localizedDescription)
+                    }
+                })
+            } else {
+                println("IN shower FUNCTION savePressed- showerConfig.save" + error!.localizedDescription)
+            }
+        })
+        
     }
 
     func convertToSecs(hours: Int, minutes: Int) -> Int {
         var hoursToSec = hours * 3600
         var minutesToSec = minutes * 60
-        
         return hoursToSec + minutesToSec
-    
     }
     
 
