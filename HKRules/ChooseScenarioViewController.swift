@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 class ChooseScenarioViewController: UIViewController {
 
@@ -52,6 +53,10 @@ class ChooseScenarioViewController: UIViewController {
     }
     
 
+    @IBAction func logoutPressed(sender: UIButton) {
+        PFUser.logOut()
+    }
+    
     /*
     // MARK: - Navigation
 

@@ -165,15 +165,27 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y9L-SN-aMM">
+                                <rect key="frame" x="275" y="477" width="49" height="30"/>
+                                <state key="normal" title="Logout">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="logoutPressed:" destination="AYN-3o-9v6" eventType="touchUpInside" id="8KE-aZ-2hQ"/>
+                                    <segue destination="BYZ-38-t0r" kind="presentation" id="pwt-H9-i5z"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="gf6-S4-Nhs" secondAttribute="centerX" id="2Gu-WL-kjJ"/>
                             <constraint firstItem="5cm-I4-MSf" firstAttribute="top" secondItem="gf6-S4-Nhs" secondAttribute="bottom" constant="8" id="6B8-Aa-Ng0"/>
+                            <constraint firstItem="qPc-GW-S0U" firstAttribute="top" secondItem="y9L-SN-aMM" secondAttribute="bottom" constant="93" id="9XC-YR-gpt"/>
                             <constraint firstItem="DSO-PQ-1pE" firstAttribute="top" secondItem="VsO-b7-EYC" secondAttribute="bottom" constant="100" id="AGQ-qL-3Q7"/>
                             <constraint firstItem="5cm-I4-MSf" firstAttribute="centerX" secondItem="gf6-S4-Nhs" secondAttribute="centerX" id="JJ2-vC-GZl"/>
                             <constraint firstItem="5cm-I4-MSf" firstAttribute="centerX" secondItem="Hel-nn-aVj" secondAttribute="centerX" id="JZa-35-OW4"/>
                             <constraint firstItem="Hel-nn-aVj" firstAttribute="top" secondItem="5cm-I4-MSf" secondAttribute="bottom" constant="8" id="Szd-wi-aHS"/>
+                            <constraint firstItem="y9L-SN-aMM" firstAttribute="centerX" secondItem="hnL-hg-VCV" secondAttribute="centerX" id="TIH-f0-mO4"/>
                             <constraint firstItem="5cm-I4-MSf" firstAttribute="centerX" secondItem="hnL-hg-VCV" secondAttribute="centerX" id="afL-6K-6dp"/>
                             <constraint firstItem="hnL-hg-VCV" firstAttribute="top" secondItem="Hel-nn-aVj" secondAttribute="bottom" constant="8" id="gUu-Yv-iQO"/>
                             <constraint firstAttribute="centerX" secondItem="DSO-PQ-1pE" secondAttribute="centerX" id="oXC-KJ-Qd9"/>
@@ -334,7 +346,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="countDownTimer" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="yhx-UT-F7j">
-                                <rect key="frame" x="0.0" y="172" width="600" height="162"/>
+                                <rect key="frame" x="0.0" y="219" width="600" height="162"/>
                                 <date key="date" timeIntervalSinceReferenceDate="460668818.71337402">
                                     <!--2015-08-07 19:33:38 +0000-->
                                 </date>
@@ -343,10 +355,10 @@
                                 </date>
                             </datePicker>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3S-n5-J30">
-                                <rect key="frame" x="264" y="426" width="73" height="30"/>
+                                <rect key="frame" x="264" y="475" width="73" height="30"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="73" id="rxD-JJ-eJZ"/>
+                                    <constraint firstAttribute="width" constant="73" id="quZ-3B-YJ4"/>
                                 </constraints>
                                 <state key="normal" title="Save">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -357,14 +369,25 @@
                                     <segue destination="AYN-3o-9v6" kind="presentation" id="5MY-z2-llM"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shower alert time?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zX4-oQ-UIe">
+                                <rect key="frame" x="112" y="177" width="376" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="yhx-UT-F7j" firstAttribute="centerX" secondItem="g3S-n5-J30" secondAttribute="centerX" id="Gp4-ga-oes"/>
-                            <constraint firstAttribute="trailing" secondItem="yhx-UT-F7j" secondAttribute="trailing" id="HnN-uE-kng"/>
-                            <constraint firstItem="wZP-58-Kid" firstAttribute="top" secondItem="g3S-n5-J30" secondAttribute="bottom" constant="144" id="VNa-Gk-Chf"/>
-                            <constraint firstItem="g3S-n5-J30" firstAttribute="top" secondItem="yhx-UT-F7j" secondAttribute="bottom" constant="92" id="hoW-u9-4jk"/>
-                            <constraint firstItem="yhx-UT-F7j" firstAttribute="leading" secondItem="dc5-e0-Fcx" secondAttribute="leading" id="mbK-df-0N6"/>
+                            <constraint firstItem="yhx-UT-F7j" firstAttribute="centerY" secondItem="dc5-e0-Fcx" secondAttribute="centerY" id="4Q5-ba-i8j"/>
+                            <constraint firstItem="zX4-oQ-UIe" firstAttribute="top" secondItem="2gO-bP-gWI" secondAttribute="bottom" constant="157" id="9g7-xJ-lsb"/>
+                            <constraint firstItem="g3S-n5-J30" firstAttribute="centerX" secondItem="yhx-UT-F7j" secondAttribute="centerX" id="GdM-pK-r7a"/>
+                            <constraint firstItem="zX4-oQ-UIe" firstAttribute="leading" secondItem="dc5-e0-Fcx" secondAttribute="leadingMargin" constant="96" id="HFG-SV-VhM"/>
+                            <constraint firstAttribute="trailing" secondItem="yhx-UT-F7j" secondAttribute="trailing" id="Jkm-Mh-r2b"/>
+                            <constraint firstItem="yhx-UT-F7j" firstAttribute="centerX" secondItem="zX4-oQ-UIe" secondAttribute="centerX" id="NJH-LO-WuH"/>
+                            <constraint firstItem="wZP-58-Kid" firstAttribute="top" secondItem="g3S-n5-J30" secondAttribute="bottom" constant="95" id="ci9-7h-u0V"/>
+                            <constraint firstItem="g3S-n5-J30" firstAttribute="top" secondItem="yhx-UT-F7j" secondAttribute="bottom" constant="94" id="fMR-Lf-oxo"/>
+                            <constraint firstItem="yhx-UT-F7j" firstAttribute="top" secondItem="zX4-oQ-UIe" secondAttribute="bottom" constant="8" symbolic="YES" id="frB-Xu-Yqu"/>
+                            <constraint firstItem="yhx-UT-F7j" firstAttribute="leading" secondItem="dc5-e0-Fcx" secondAttribute="leading" id="kc1-3W-DsQ"/>
                         </constraints>
                     </view>
                     <connections>
@@ -480,7 +503,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="2y3-mU-MYW"/>
         <segue reference="5MY-z2-llM"/>
-        <segue reference="S0T-Xd-OYN"/>
+        <segue reference="pwt-H9-i5z"/>
     </inferredMetricsTieBreakers>
 </document>
