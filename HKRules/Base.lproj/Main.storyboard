@@ -342,9 +342,12 @@
                                     <!--1970-01-01 11:00:00 +0000-->
                                 </date>
                             </datePicker>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3S-n5-J30">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3S-n5-J30">
                                 <rect key="frame" x="264" y="426" width="73" height="30"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="73" id="rxD-JJ-eJZ"/>
+                                </constraints>
                                 <state key="normal" title="Save">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -357,14 +360,16 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="yhx-UT-F7j" firstAttribute="leading" secondItem="dc5-e0-Fcx" secondAttribute="leading" id="8Gg-d1-Dgh"/>
-                            <constraint firstAttribute="trailing" secondItem="yhx-UT-F7j" secondAttribute="trailing" id="Acj-K4-v9H"/>
-                            <constraint firstItem="yhx-UT-F7j" firstAttribute="top" secondItem="2gO-bP-gWI" secondAttribute="bottom" constant="152" id="w6I-IS-fZf"/>
+                            <constraint firstItem="yhx-UT-F7j" firstAttribute="centerX" secondItem="g3S-n5-J30" secondAttribute="centerX" id="Gp4-ga-oes"/>
+                            <constraint firstAttribute="trailing" secondItem="yhx-UT-F7j" secondAttribute="trailing" id="HnN-uE-kng"/>
+                            <constraint firstItem="wZP-58-Kid" firstAttribute="top" secondItem="g3S-n5-J30" secondAttribute="bottom" constant="144" id="VNa-Gk-Chf"/>
+                            <constraint firstItem="g3S-n5-J30" firstAttribute="top" secondItem="yhx-UT-F7j" secondAttribute="bottom" constant="92" id="hoW-u9-4jk"/>
+                            <constraint firstItem="yhx-UT-F7j" firstAttribute="leading" secondItem="dc5-e0-Fcx" secondAttribute="leading" id="mbK-df-0N6"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="datePicker" destination="yhx-UT-F7j" id="YCf-s5-Ix2"/>
                         <outlet property="savedBtn" destination="g3S-n5-J30" id="iWw-xb-qGB"/>
-                        <outlet property="timePicker" destination="yhx-UT-F7j" id="6fg-RU-3Ce"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ohD-Dm-Oyw" userLabel="First Responder" sceneMemberID="firstResponder"/>
