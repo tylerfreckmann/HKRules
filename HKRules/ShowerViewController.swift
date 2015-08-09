@@ -23,6 +23,9 @@ class ShowerViewController: UIViewController {
         // Set date picker to only pick time 
         datePicker.datePickerMode = UIDatePickerMode.CountDownTimer
         
+        // Set initial time countdown to 5 minutes. (stock value) 
+        datePicker.countDownDuration = 300
+        
         // Initialize User
         user = PFUser.currentUser()!
         
