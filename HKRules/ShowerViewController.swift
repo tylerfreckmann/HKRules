@@ -48,7 +48,7 @@ class ShowerViewController: UIViewController {
             })
         } else {
             showerConfig = optionalShowerConfig as! PFObject
-            showerConfig.fetch()
+            //showerConfig.fetch()
         }
     }
 
