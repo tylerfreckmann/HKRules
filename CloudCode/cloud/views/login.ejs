@@ -5,12 +5,12 @@
   </head>
   <body>
 
-# Hello World
+		<form method="post" action="/login">
 
-    <form method="post" action="/hello">
-
-        <input name="message"></input>
-        <input class="button" type="submit" value="Update Greeting">
+      <input name="username" placeholder="Username"></input>
+      <input name="password" placeholder="Password" type="password"></input>
+      <input style="display: none" name="t" value=<%= t %>></input>
+      <input class="button" type="submit" value="Login to HK Rules">
 
     </form>
   </body>
