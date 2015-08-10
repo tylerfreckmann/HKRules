@@ -11,6 +11,9 @@
 		070D81411B79118D00FA622E /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 070D81401B79118D00FA622E /* ParseUI.framework */; };
 		070D81431B7912D000FA622E /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 070D81421B7912D000FA622E /* Accounts.framework */; };
 		070D81451B7912D600FA622E /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 070D81441B7912D600FA622E /* Social.framework */; };
+		070D81471B7925B200FA622E /* Harman_Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 070D81461B7925B200FA622E /* Harman_Logo.png */; };
+		070D814A1B7929EB00FA622E /* Harman_Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 070D81461B7925B200FA622E /* Harman_Logo.png */; };
+		070D814B1B7929F500FA622E /* alarm.wav in Resources */ = {isa = PBXBuildFile; fileRef = F8E4D0151B6FF2EC00D4255B /* alarm.wav */; };
 		073400921B7687700065CF10 /* ShowerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073400911B7687700065CF10 /* ShowerViewController.swift */; };
 		F8E4D00B1B6FDE8F00D4255B /* libHKWirelessHD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E4D0081B6FDE8F00D4255B /* libHKWirelessHD.a */; };
 		F8E4D00C1B6FDE8F00D4255B /* License-iOS-Omni.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F8E4D0091B6FDE8F00D4255B /* License-iOS-Omni.pdf */; };
@@ -60,6 +63,7 @@
 		070D81401B79118D00FA622E /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		070D81421B7912D000FA622E /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		070D81441B7912D600FA622E /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		070D81461B7925B200FA622E /* Harman_Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Harman_Logo.png; sourceTree = "<group>"; };
 		073400911B7687700065CF10 /* ShowerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowerViewController.swift; sourceTree = "<group>"; };
 		F8E4D0021B6FDE8F00D4255B /* DeviceGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceGroup.h; sourceTree = "<group>"; };
 		F8E4D0031B6FDE8F00D4255B /* DeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceInfo.h; sourceTree = "<group>"; };
@@ -144,12 +148,12 @@
 		070D813D1B790F5000FA622E /* VCs */ = {
 			isa = PBXGroup;
 			children = (
+				070D813E1B7910AB00FA622E /* ParseLoginVC.swift */,
 				F8E4D01F1B74285400D4255B /* ChooseScenarioViewController.swift */,
+				F8F5AAB81B6AF476002E84D8 /* WakeUpViewController.swift */,
 				F8E4D01D1B72A94100D4255B /* CustomTextViewController.swift */,
 				F8E4D01B1B7297BF00D4255B /* ChooseSoundTableViewController.swift */,
-				F8F5AAB81B6AF476002E84D8 /* WakeUpViewController.swift */,
 				073400911B7687700065CF10 /* ShowerViewController.swift */,
-				070D813E1B7910AB00FA622E /* ParseLoginVC.swift */,
 			);
 			name = VCs;
 			sourceTree = "<group>";
@@ -227,6 +231,7 @@
 				F8E4D0281B751AD800D4255B /* MMPDeepSleepPreventer.h */,
 				F8E4D02D1B7529F300D4255B /* silence.wav */,
 				F8E4D0241B75199D00D4255B /* MMPSilence.wav */,
+				070D81461B7925B200FA622E /* Harman_Logo.png */,
 				F8E4D0151B6FF2EC00D4255B /* alarm.wav */,
 				F8F5AA7C1B69B370002E84D8 /* Info.plist */,
 			);
@@ -357,6 +362,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8E4D0161B6FF2EC00D4255B /* alarm.wav in Resources */,
+				070D81471B7925B200FA622E /* Harman_Logo.png in Resources */,
 				F8E4D02E1B7529F300D4255B /* silence.wav in Resources */,
 				F8F5AA831B69B370002E84D8 /* Main.storyboard in Resources */,
 				F8F5AA881B69B370002E84D8 /* LaunchScreen.xib in Resources */,
@@ -370,6 +376,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				070D814B1B7929F500FA622E /* alarm.wav in Resources */,
+				070D814A1B7929EB00FA622E /* Harman_Logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

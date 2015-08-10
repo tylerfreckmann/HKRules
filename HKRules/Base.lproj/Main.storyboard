@@ -41,7 +41,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="pYV-L9-VaN" kind="presentation" id="hnI-t3-6qB"/>
+                                    <segue destination="pYV-L9-VaN" kind="show" id="kHr-qL-emg"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hel-nn-aVj">
@@ -269,7 +269,7 @@
                                     <!--1970-01-01 11:00:00 +0000-->
                                 </date>
                             </datePicker>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3S-n5-J30">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3S-n5-J30">
                                 <rect key="frame" x="264" y="475" width="73" height="30"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -281,9 +281,10 @@
                                 </state>
                                 <connections>
                                     <action selector="savedPressed:" destination="pYV-L9-VaN" eventType="touchUpInside" id="hze-pi-ruP"/>
+                                    <segue destination="AYN-3o-9v6" kind="presentation" id="wMh-Vc-Xgz"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shower alert time?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zX4-oQ-UIe">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Shower alert time?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zX4-oQ-UIe">
                                 <rect key="frame" x="112" y="177" width="376" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -304,6 +305,7 @@
                             <constraint firstItem="yhx-UT-F7j" firstAttribute="leading" secondItem="dc5-e0-Fcx" secondAttribute="leading" id="kc1-3W-DsQ"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="zyL-20-bEB"/>
                     <connections>
                         <outlet property="datePicker" destination="yhx-UT-F7j" id="YCf-s5-Ix2"/>
                         <outlet property="savedBtn" destination="g3S-n5-J30" id="iWw-xb-qGB"/>
@@ -311,10 +313,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ohD-Dm-Oyw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2640" y="1159"/>
+            <point key="canvasLocation" x="2640" y="1365"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="wMh-Vc-Xgz"/>
         <segue reference="2y3-mU-MYW"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -15,7 +15,7 @@ class ShowerViewController: UIViewController {
     @IBOutlet weak var savedBtn: UIButton!
     
     var user: PFUser!
-    var showerConfig: PFObject!
+    var currentShower: PFObject!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,11 +32,11 @@ class ShowerViewController: UIViewController {
         // Initialize showerConfig
         var optionalShowerConfig: AnyObject? = user["showerConfig"]
         if optionalShowerConfig == nil {
-            showerConfig = PFObject(className: "showerConfig")
-            showerConfig["timeTillAlert"] = 120
-            showerConfig.saveInBackgroundWithBlock({ (success, error) -> Void in
+            currentShower = PFObject(className: "ShowerConfig")
+            currentShower["timeTillAlert"] = 300
+            currentShower.saveInBackgroundWithBlock({ (success, error) -> Void in
                 if success {
-                    self.user["showerConfig"] = self.showerConfig
+                    self.user["showerConfig"] = self.currentShower
                     self.user.saveInBackgroundWithBlock({ (success, error) -> Void in
                         if !success {
                             println("IN shower FUNCTION viewDidLoad - user.save" + error!.localizedDescription)
@@ -47,7 +47,7 @@ class ShowerViewController: UIViewController {
                 }
             })
         } else {
-            showerConfig = optionalShowerConfig as! PFObject
+            currentShower = optionalShowerConfig as! PFObject
         }
     }
 
@@ -67,10 +67,10 @@ class ShowerViewController: UIViewController {
         println("Total seconds: \(totalSecs)")
         
         // save shower time to the parse cloud 
-        showerConfig["timeTillAlert"] = totalSecs
-        showerConfig.saveInBackgroundWithBlock({ (success, error) -> Void in
+        currentShower["timeTillAlert"] = totalSecs
+        currentShower.saveInBackgroundWithBlock({ (success, error) -> Void in
             if success {
-                self.user["showerConfig"] = self.showerConfig
+                self.user["showerConfig"] = self.currentShower
                 self.user.saveInBackgroundWithBlock({ (success, error) -> Void in
                     if !success {
                         println("IN shower FUNCTION savePressed- user.save" + error!.localizedDescription)
