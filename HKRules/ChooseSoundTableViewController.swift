@@ -61,15 +61,19 @@ class ChooseSoundTableViewController: UITableViewController, MPMediaPickerContro
         switch indexPath.row {
         case 0:
             cell.textLabel?.text = "Standard Alarm Sound"
+            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            //wakeConfig["sound"] = "alarm"
             var sound = wakeConfig["sound"] as! String?
             if sound == nil || sound! == "alarm" {
                 cell.accessoryType = UITableViewCellAccessoryType.Checkmark
             } else {
                 cell.accessoryType = UITableViewCellAccessoryType.None
             }
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
         default:
             cell.textLabel?.text = "Song from library"
+            cell.accessoryType = UITableViewCellAccessoryType.None
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
             var sound = wakeConfig["sound"] as! String?
             if sound == nil || sound! == "alarm" {
                 cell.accessoryType = UITableViewCellAccessoryType.None
@@ -77,42 +81,44 @@ class ChooseSoundTableViewController: UITableViewController, MPMediaPickerContro
                 cell.accessoryType = UITableViewCellAccessoryType.Checkmark
                 
             }
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
         }
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var alarmCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))
-        var soundCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0))
-        
-        // If alarm cell is checked
-        if alarmCell?.accessoryType == UITableViewCellAccessoryType.Checkmark {
+        var cell = tableView.cellForRowAtIndexPath(indexPath)
+        if cell?.accessoryType == UITableViewCellAccessoryType.None {
+            var alarmCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0))
+            var soundCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0))
             
-            // Uncheck alarm cell
-            alarmCell?.accessoryType = UITableViewCellAccessoryType.None
-            
-            // Check sound cell
-            soundCell?.accessoryType = UITableViewCellAccessoryType.Checkmark
-            
-            // Get song
-            getSong()
-            
-        } else {
-            
-            // Check alarm cell
-            alarmCell?.accessoryType = UITableViewCellAccessoryType.Checkmark
-            
-            // Uncheck sound cell
-            soundCell?.accessoryType = UITableViewCellAccessoryType.None
-            
-            // Set alarm
-            wakeConfig["sound"] = "alarm"
-            wakeConfig.saveInBackgroundWithBlock({ (success, error) -> Void in
-                if !success {
-                    println("IN ChooseSound FUNCTION tableView: didSelectRowAtIndexPath" + error!.localizedDescription)
-                }
-            })
+            // If alarm cell is checked
+            if alarmCell?.accessoryType == UITableViewCellAccessoryType.Checkmark {
+                
+                // Uncheck alarm cell
+                alarmCell?.accessoryType = UITableViewCellAccessoryType.None
+                
+                // Check sound cell
+                soundCell?.accessoryType = UITableViewCellAccessoryType.Checkmark
+                
+                // Get song
+                getSong()
+                
+            } else {
+                
+                // Check alarm cell
+                alarmCell?.accessoryType = UITableViewCellAccessoryType.Checkmark
+                
+                // Uncheck sound cell
+                soundCell?.accessoryType = UITableViewCellAccessoryType.None
+                
+                // Set alarm
+                wakeConfig["sound"] = "alarm"
+                wakeConfig.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    if !success {
+                        println("IN ChooseSound FUNCTION tableView: didSelectRowAtIndexPath" + error!.localizedDescription)
+                    }
+                })
+            }
         }
     }
     

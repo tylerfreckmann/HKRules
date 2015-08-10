@@ -12,15 +12,37 @@ Parse.Cloud.define("setCloudAlarm", function(request, response) {
 	userQuery.find({
 		success: function(users) {
 			var user = users[0];
+            var wakeConfig = user.get("wakeConfig");
+
+            // Get greeting
+            var baseSpeechURL = "http://tts-api.com/tts.mp3?q=";
+            var greeting = wakeConfig.get("greeting").replace(' ', '+');
+            var ttsURL = baseSpeechURL+greeting+"&return_url=1";
+            var greetingURL;
+                       
+            Parse.Cloud.httpRequest({
+                url: ttsURL,
+                success: function(httpResponse) {
+                    greetingURL = httpResponse.text;
+                    response.success("successfully created greeting tts");
+                },
+                error: function(httpResponse) {
+                    response.error("error with greeting tts: "+httpResponse.text);
+                }
+            });
+
 			var pushQuery = new Parse.Query(Parse.Installation);
 			pushQuery.equalTo("user", user);
-
 			Parse.Push.send({
 				where: pushQuery,
 				data: {
 					"alert": "ALARM",
 					"content-available": 1,
-					"soundAlarm": 1
+					"soundAlarm": 1,
+                    "sound": wakeConfig.get("sound"),
+                    "greeting": greetingURL,
+                    "weather": wakeConfig.get("weather"),
+                    "lights": wakeConfig.get("lights")
 				},
 				push_time: alarmDate
 			}, {

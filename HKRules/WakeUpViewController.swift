@@ -46,8 +46,9 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
             })
         } else {
             wakeConfig = optionalWakeConfig as! PFObject
-            wakeConfig.fetch()
-            configureTable()
+            wakeConfig.fetchInBackgroundWithBlock({ (wakeConfig, error) -> Void in
+                self.configureTable()
+            })
         }
     }
     
@@ -85,6 +86,9 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.selectionStyle = UITableViewCellSelectionStyle.None
         case 2:
             cell.textLabel?.text = "Weather Update"
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+            //wakeConfig["weather"] = true
             println("HERE")
             println(wakeConfig["weather"])
             var weather = wakeConfig["weather"] as! Bool?
@@ -93,20 +97,25 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
             } else {
                 cell.accessoryType = UITableViewCellAccessoryType.Checkmark
             }
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
         default:
             cell.textLabel?.text = "Turn on Lights"
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            cell.accessoryType = UITableViewCellAccessoryType.None
+            //wakeConfig["lights"] = false
             var lights = wakeConfig["lights"] as! Bool?
             if lights == nil || !lights! {
                 cell.accessoryType = UITableViewCellAccessoryType.None
             } else {
                 cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-//                var token: AnyObject? = user["sttoken"]
-//                if token == nil {
-//                    performSegueWithIdentifier("showSmartThings", sender: nil)
-//                }
+                user.fetchInBackgroundWithBlock({ (user, error) -> Void in
+                    if let user = user as! PFUser! {
+                        var token: AnyObject? = user["sttoken"]
+                        if token == nil {
+                            self.performSegueWithIdentifier("smartThings", sender: nil)
+                        }
+                    }
+                })
             }
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
         }
         return cell
     }
@@ -138,6 +147,14 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
             } else {
                 cell?.accessoryType = UITableViewCellAccessoryType.Checkmark
                 wakeConfig["lights"] = true
+                user.fetchInBackgroundWithBlock({ (user, error) -> Void in
+                    if let user = user as! PFUser! {
+                        var token: AnyObject? = user["sttoken"]
+                        if token == nil {
+                            self.performSegueWithIdentifier("smartThings", sender: nil)
+                        }
+                    }
+                })
             }
             wakeConfig.saveInBackgroundWithBlock({ (success, error) -> Void in
                 if !success {

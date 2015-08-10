@@ -63,11 +63,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         println("notification")
         if let soundAlarm: AnyObject = userInfo["soundAlarm"] {
-            let nsWavPath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alarm.wav")
-            let url = NSURL(fileURLWithPath: nsWavPath)
-            println(HKWControlHandler.sharedInstance().playWAV(nsWavPath))
-            println(nsWavPath)
-            var timer = NSTimer(timeInterval: 10, target: self, selector: "stop", userInfo: nil, repeats: false)
+            println(userInfo)
+//            let nsWavPath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alarm.wav")
+//            let url = NSURL(fileURLWithPath: nsWavPath)
+//            println(HKWControlHandler.sharedInstance().playWAV(nsWavPath))
+//            println(nsWavPath)
+//            var timer = NSTimer(timeInterval: 10, target: self, selector: "stop", userInfo: nil, repeats: false)
         }
         
         if let alertURL: AnyObject = userInfo["ttsURL"] {
