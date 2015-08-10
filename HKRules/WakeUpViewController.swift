@@ -101,10 +101,10 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 cell.accessoryType = UITableViewCellAccessoryType.None
             } else {
                 cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-                var token: AnyObject? = user["sttoken"]
-                if token == nil {
-                    performSegueWithIdentifier("showSmartThings", sender: nil)
-                }
+//                var token: AnyObject? = user["sttoken"]
+//                if token == nil {
+//                    performSegueWithIdentifier("showSmartThings", sender: nil)
+//                }
             }
             cell.selectionStyle = UITableViewCellSelectionStyle.None
         }
