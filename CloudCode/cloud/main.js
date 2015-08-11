@@ -1,8 +1,6 @@
 require('cloud/app.js')
-// Use Parse.Cloud.define to define as many cloud functions as you want.
-Parse.Cloud.define("hello", function(request, response) {
-  response.success("Goodbye world!");
-});
+
+var baseSpeechURL = "http://tts-api.com/tts.mp3?q=";
 
 // Sets the alarm in the cloud, and notifies user of the result through push notifcation. 
 Parse.Cloud.define("setCloudAlarm", function(request, response) {
@@ -12,8 +10,7 @@ Parse.Cloud.define("setCloudAlarm", function(request, response) {
     var greetingURL;
     wakeConfig.fetch().then(function(wakeConfig) {
         // Get greeting
-        var baseSpeechURL = "http://tts-api.com/tts.mp3?q=";
-        var greeting = wakeConfig.get("greeting").replace(' ', '+');
+        var greeting = wakeConfig.get("greeting").split(" ").join("%20");
         var ttsURL = baseSpeechURL+greeting+"&return_url=1";
         return Parse.Cloud.httpRequest({ url: ttsURL});
     }).then(function(httpResponse) {
@@ -44,10 +41,55 @@ Parse.Cloud.define("setCloudAlarm", function(request, response) {
 // Called to push notification to HKRules application after shower timer triggered.
 Parse.Cloud.define("showerStarted", function(request, response) {
 
-	var userQuery = new Parse.Query(Parse.User);        
-	userQuery.equalTo("username", request.params.username);
+	var user = Parse.User.current();
+               
+    // Get the current time
+    var alertTime = new Date();
+    alertTime.getHours();
+    alertTime.getMinutes();
+    alertTime.getSeconds();
+                        
+    var pushQuery = new Parse.Query(Parse.Installation);
+    pushQuery.equalTo("user", user);
+    pushQuery.equalTo("appName", "HKRules")                   
+    
+    var ttsURL = baseSpeechURL 
+                + "Alert Alert Alert Alert Alert You have showered for ".split(" ").join("%20") 
+                + request.params.showerTime 
+                + "&return_url=1";
+    
+    Parse.Cloud.httpRequest({
+        url: ttsURL,
+        success: function(httpResponse) {
+            // Push to HKRules phone
+            Parse.Push.send({
+                where: pushQuery,
+                data: {
+                    "alert": "You showered for " + request.params.showerTime.replace("+", " ") + "!",
+                    "content-available": 1,
+                    "ttsURL":  httpResponse.text
+                },
+                    push_time: alertTime
+            },{ success: function() {
+                response.success("push for " + request.params.username + " scheduled.");
+            },
+                error: function(error) {
+                response.error("push errored");         
+            }
+            }); //end push
+        },
+        error: function(httpResponse) {
+            response.error(httpResponse)
+        }
+    });        
+});
 
-	userQuery.find({
+// Called when client is about to leave the house 
+Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
+    var userQuery = new Parse.Query(Parse.User);        
+    userQuery.equalTo("username", request.params.username);
+
+    userQuery.find({
         success: function(users) {
                    
         // Get the current time
@@ -60,41 +102,44 @@ Parse.Cloud.define("showerStarted", function(request, response) {
         var pushQuery = new Parse.Query(Parse.Installation);
         pushQuery.equalTo("user", users[0]);
         pushQuery.equalTo("appName", "HKRules")
-                   
-        var baseSpeechURL = "http://tts-api.com/tts.mp3?q=Alert+Alert+Alert+Alert+Alert+You+have+showered+for+";
-        var concatTimeURL = baseSpeechURL.concat(request.params.timeInSeconds);
-        var ttsURL = concatTimeURL.concat("&return_url=1");
+         
+        var message = "%2C let me check if the house is safe right now".split(" ").join("%20")
+        var initialCheckURL =  baseSpeechURL + "Hi%20" + request.params.username + message + "&return_url=1"          
                    
         Parse.Cloud.httpRequest({
-            url: ttsURL,
+            url: initialCheckURL,
             success: function(httpResponse) {
+                // Able to GET intialCheckURL
 
-                // Push to HKRules phone
-                Parse.Push.send({
-                    where: pushQuery,
-                    data: {
-                        "alert": "Shower ALERT",
-                        "content-available": 1,
-                        "ttsURL":  httpResponse.text
-                    },
-                        push_time: alertTime
-                },{ success: function() {
-                    response.success("push for " + request.params.username + " scheduled.");
-                },
-                    error: function(error) {
-                    response.error("push errored");         
-                }
-                }); //end push
+
             },
             error: function(httpResponse) {
-            response.error(httpResponse)
+                response.error("GET request failed for initialCheckURL")
             }
         });
                    
     },
         error: function(error) {
-		    response.error("user find query errored");
+            response.error("user find query errored");
         }
                    
     });
 });
+
+
+                
+// Parse.Push.send({
+//     where: pushQuery,
+//     data: {
+//         "alert": "Checking for house TTS",
+//         "content-available": 1,
+//         "ttsURL":  httpResponse.text
+//     },
+//         push_time: alertTime
+// },{ success: function() {
+//     response.success("push for " + request.params.username + " scheduled.");
+// },
+//     error: function(error) {
+//     response.error("push errored");         
+// }
+// }); //end push
