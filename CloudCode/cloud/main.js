@@ -24,7 +24,7 @@ Parse.Cloud.define("setCloudAlarm", function(request, response) {
             where: pushQuery,
             data: {
                 "alert": "ALARM",
-                //"category": "STOP_ALARM_SOUND_CATEGORY",
+                "category": "STOP_ALARM_SOUND_CATEGORY",
                 "content-available": 1,
                 "soundAlarm": 1,
                 "soundFile": wakeConfig.get("sound"),
