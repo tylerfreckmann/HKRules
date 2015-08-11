@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
 
 // HKWirelessHD license key used for initializeHKWirelessHD
 let kLicenseKeyGlobal = "2FA8-2FD6-C27D-47E8-A256-D011-3751-2BD6"
+
