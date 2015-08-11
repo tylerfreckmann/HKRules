@@ -47,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: Set(arrayLiteral: [stopAlarmSoundCategory]))
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()
+            println("did register for remote notifications")
         }
         
         // prevent from turning into background
@@ -79,22 +80,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let soundAlarm: AnyObject = userInfo["soundAlarm"] {
             println(userInfo)
             
-            // Play sound
-            let soundFile = userInfo["soundFile"] as! String
-            if soundFile == "alarm" {
-                let nsWavPath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alarm.wav")
-                let url = NSURL(fileURLWithPath: nsWavPath)
-                println(HKWControlHandler.sharedInstance().playWAV(nsWavPath))
-                println(nsWavPath)
-                var timer = NSTimer(timeInterval: 10, target: self, selector: "stop", userInfo: nil, repeats: false)
-            } else {
-                let query = MPMediaQuery.songsQuery()
-                let predicate = MPMediaPropertyPredicate(value: soundFile, forProperty: MPMediaItemPropertyPersistentID)
-                query.addFilterPredicate(predicate)
-                
-                let item = query.items.first as! MPMediaItem
-                var assetURL = item.assetURL
-                println(HKWControlHandler.sharedInstance().playCAF(assetURL, songName: item.title, resumeFlag: false))
+            if !HKWControlHandler.sharedInstance().isPlaying() {
+                // Play sound
+                let soundFile = userInfo["soundFile"] as! String
+                if soundFile == "alarm" {
+                    let nsWavPath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alarm.wav")
+                    let url = NSURL(fileURLWithPath: nsWavPath)
+                    println(HKWControlHandler.sharedInstance().playWAV(nsWavPath))
+                    println(nsWavPath)
+                    var timer = NSTimer(timeInterval: 10, target: self, selector: "stop", userInfo: nil, repeats: false)
+                } else {
+                    let query = MPMediaQuery.songsQuery()
+                    let predicate = MPMediaPropertyPredicate(value: soundFile, forProperty: MPMediaItemPropertyPersistentID)
+                    query.addFilterPredicate(predicate)
+                    
+                    let item = query.items.first as! MPMediaItem
+                    var assetURL = item.assetURL
+                    println(HKWControlHandler.sharedInstance().playCAF(assetURL, songName: item.title, resumeFlag: false))
+                }
             }
         }
         
@@ -111,9 +114,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
-        HKWControlHandler.sharedInstance().stop()
+        println("handling action")
         println(identifier)
         println(userInfo)
+        HKWControlHandler.sharedInstance().stop()
         completionHandler()
     }
     
