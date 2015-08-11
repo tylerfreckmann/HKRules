@@ -16,11 +16,6 @@ class ParseLoginVC: PFLogInViewController, PFLogInViewControllerDelegate, PFSign
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.darkGrayColor()
-        /*println("Got here")
-        let picturePath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("Harman_Logo.png")
-        var logoImage = UIImage(named: "Harman_Logo.png", inBundle: NSBundle.mainBundle(), compatibleWithTraitCollection: nil)
-        let logoView = UIImageView(image: logoImage)
-        self.logInView!.logo = logoView*/
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -43,10 +38,22 @@ class ParseLoginVC: PFLogInViewController, PFLogInViewControllerDelegate, PFSign
     }
     
     func logInViewController(controller: PFLogInViewController, didLogInUser user: PFUser) -> Void {
+        updateInstallation()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func signUpViewController(signUpController: PFSignUpViewController, didSignUpUser user: PFUser) -> Void {
+        updateInstallation()
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func updateInstallation() {
+        let installation = PFInstallation.currentInstallation();
+        installation["user"] = PFUser.currentUser();
+        installation.saveInBackgroundWithBlock { (success, error) -> Void in
+            if error != nil {
+                println(error)
+            }
+        }
     }
 }

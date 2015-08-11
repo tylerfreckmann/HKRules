@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import MediaPlayer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,10 +28,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Parse.setApplicationId("q0zDsAFXiBtK2FFHMwBnsqWvqsNBZcJJy3GFL9xa",
             clientKey: "YCaxY5KPgHdrGLZoUUwReGIyqEyAtAVFc0r0Mkb3")
         
+        // Configure Push notification types
+        // Action
+        var stopAlarmSoundAction = UIMutableUserNotificationAction()
+        stopAlarmSoundAction.identifier = "STOP_ALARM_SOUND"
+        stopAlarmSoundAction.title = "Good Morning!"
+        stopAlarmSoundAction.activationMode = UIUserNotificationActivationMode.Foreground
+        stopAlarmSoundAction.destructive = false
+        // Category
+        var stopAlarmSoundCategory = UIMutableUserNotificationCategory()
+        stopAlarmSoundCategory.identifier = "STOP_ALARM_SOUND_CATEGORY"
+        stopAlarmSoundCategory.setActions([stopAlarmSoundAction], forContext: UIUserNotificationActionContext.Minimal)
+        
+        
         // Register for Push Notitications
         if application.respondsToSelector("registerUserNotificationSettings:") {
             let userNotificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound
-            let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: nil)
+            let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: Set(arrayLiteral: [stopAlarmSoundCategory]))
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()
         }
@@ -64,11 +78,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         println("notification")
         if let soundAlarm: AnyObject = userInfo["soundAlarm"] {
             println(userInfo)
-//            let nsWavPath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alarm.wav")
-//            let url = NSURL(fileURLWithPath: nsWavPath)
-//            println(HKWControlHandler.sharedInstance().playWAV(nsWavPath))
-//            println(nsWavPath)
-//            var timer = NSTimer(timeInterval: 10, target: self, selector: "stop", userInfo: nil, repeats: false)
+            
+            // Play sound
+            let soundFile = userInfo["soundFile"] as! String
+            if soundFile == "alarm" {
+                let nsWavPath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alarm.wav")
+                let url = NSURL(fileURLWithPath: nsWavPath)
+                println(HKWControlHandler.sharedInstance().playWAV(nsWavPath))
+                println(nsWavPath)
+                var timer = NSTimer(timeInterval: 10, target: self, selector: "stop", userInfo: nil, repeats: false)
+            } else {
+                let query = MPMediaQuery.songsQuery()
+                let predicate = MPMediaPropertyPredicate(value: soundFile, forProperty: MPMediaItemPropertyPersistentID)
+                query.addFilterPredicate(predicate)
+                
+                let item = query.items.first as! MPMediaItem
+                var assetURL = item.assetURL
+                println(HKWControlHandler.sharedInstance().playCAF(assetURL, songName: item.title, resumeFlag: false))
+            }
         }
         
         if let alertURL: AnyObject = userInfo["ttsURL"] {
@@ -81,6 +108,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         completionHandler(UIBackgroundFetchResult.NewData)
+    }
+    
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        HKWControlHandler.sharedInstance().stop()
+        println(identifier)
+        println(userInfo)
+        completionHandler()
     }
     
     func stop() {
