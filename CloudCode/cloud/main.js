@@ -1,8 +1,4 @@
 require('cloud/app.js')
-// Use Parse.Cloud.define to define as many cloud functions as you want.
-Parse.Cloud.define("hello", function(request, response) {
-  response.success("Goodbye world!");
-});
 
 // Sets the alarm in the cloud, and notifies user of the result through push notifcation. 
 Parse.Cloud.define("setCloudAlarm", function(request, response) {
@@ -92,7 +88,7 @@ Parse.Cloud.define("showerStarted", function(request, response) {
                 Parse.Push.send({
                     where: pushQuery,
                     data: {
-                        "alert": "Shower ALERT",
+                        "alert": "You showered for " + request.params.timeInSeconds,
                         "content-available": 1,
                         "ttsURL":  httpResponse.text
                     },
@@ -122,3 +118,17 @@ Parse.Cloud.define("showerStarted", function(request, response) {
 Parse.Cloud.define("sttoken", function(request, response) {
 	response.success("sttoken");
 });
+
+// Called when client is about to leave the house 
+Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
+
+    response.success("In preapreToLeaveHouse")
+
+});
+
+
+
+
+
+
+
