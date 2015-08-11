@@ -53,10 +53,11 @@ Parse.Cloud.define("showerStarted", function(request, response) {
     pushQuery.equalTo("user", user);
     pushQuery.equalTo("appName", "HKRules")                   
     
+    // Convert alert message to TTS URL to get mp3 to stream from
     var ttsURL = baseSpeechURL 
-                + "Alert Alert Alert Alert Alert You have showered for ".split(" ").join("%20") 
-                + request.params.showerTime 
-                + "&return_url=1";
+        + "Alert Alert Alert Alert Alert You have showered for ".split(" ").join("%20") 
+        + request.params.showerTime 
+        + "&return_url=1";
     
     Parse.Cloud.httpRequest({
         url: ttsURL,
@@ -86,54 +87,86 @@ Parse.Cloud.define("showerStarted", function(request, response) {
 
 // Called when client is about to leave the house 
 Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
-    var userQuery = new Parse.Query(Parse.User);        
-    userQuery.equalTo("username", request.params.username);
+    var user = Parse.User.current();
 
-    userQuery.find({
-        success: function(users) {
-                   
-        // Get the current time
-        var alertTime = new Date();
-        alertTime.getHours();
-        alertTime.getMinutes();
-        alertTime.getSeconds();
-                            
-        // Init the push query
-        var pushQuery = new Parse.Query(Parse.Installation);
-        pushQuery.equalTo("user", users[0]);
-        pushQuery.equalTo("appName", "HKRules")
-         
-        var message = "%2C let me check if the house is safe right now".split(" ").join("%20")
-        var initialCheckURL =  baseSpeechURL + "Hi%20" + request.params.username + message + "&return_url=1"          
-                   
-        Parse.Cloud.httpRequest({
-            url: initialCheckURL,
-            success: function(httpResponse) {
-                // Able to GET intialCheckURL
+    // Get the current time
+    var alertTime = new Date();
+    alertTime.getHours();
+    alertTime.getMinutes();
+    alertTime.getSeconds();
 
+    var pushQuery = new Parse.Query(Parse.Installation);
+    pushQuery.equalTo("user", user);
+    pushQuery.equalTo("appName", "HKRules");
+     
+    // Get TTS mp3 from initial check message  
+    var message = "%2C let me check if the house is safe right now".split(" ").join("%20");
+    var initialCheckURL =  baseSpeechURL + "Hi%20" + request.params.username + message + "&return_url=1";          
 
-            },
-            error: function(httpResponse) {
-                response.error("GET request failed for initialCheckURL")
-            }
-        });
-                   
-    },
-        error: function(error) {
-            response.error("user find query errored");
+    // Requests for the initial check TTS 
+    Parse.Cloud.httpRequest({
+        url: initialCheckURL,
+        success: function(initialCheckMP3) {
+            // Check home security
+            var requestEndPointURL = "https://graph.api.smartthings.com/api/smartapps/endpoints?access_token=" 
+                + user.get("sttoken");
+            
+            // Request for the endpoint URL
+            Parse.Cloud.httpRequest({
+                url: requestEndPointURL,
+                success: function(httpResponse) {
+                    var json = JSON.parse(httpResponse.text);
+                    var endPointURL = json[0]["url"];
+                    var apiCallURL = "https://graph.api.smartthings.com" + endPointURL;
+
+                    // Get list of contact sensors (doors, windows, etc...)
+                    var checkSensorsURL = apiCallURL + "/contactSensors";
+                    console.log(checkSensorsURL);
+                    // Prints out 
+                    // https://graph.api.smartthings.com/api/smartapps/installations/7d1a8a2f-0bd6-473c-b19a-0a120546a9e0/contactSensors 
+                    // (which is right)
+
+                    // Request for the sensors API call 
+                    Parse.Cloud.httpRequest({
+                        url: checkSensorsURL,
+                        success: function(sensors) {
+                            response.success(sensors.text);
+                            // var sensorsJSON = JSON.parse(sensors.text);
+                            // // Loops through all sensors
+                            // for (i = 0; i < sensorsJSON.length; i++) {
+                            //     var currentSensor = sensorsJSON[i];
+                            //     if (currentSensor["value"] != "closed") {
+                            //         // You have an open sensor 
+                            //         console.log("You have an open sensor!");
+                            //     }
+                            //     else {
+                            //         console.log("Your sensors are closed, you are safe!");
+                            //     }
+                            // }
+                        },
+                        error: function(httpResponse) {
+                            response.error("GET request failed for checkSensorsURL")
+                        }
+                    });
+                },
+                error: function(httpResponse) {
+                    response.error("GET request failed for requestEndPointURL");
+                }
+            });
+        },
+        error: function() {
+            response.error("GET request failed for initialCheckURL");
         }
-                   
     });
+
 });
-
-
                 
 // Parse.Push.send({
 //     where: pushQuery,
 //     data: {
 //         "alert": "Checking for house TTS",
 //         "content-available": 1,
-//         "ttsURL":  httpResponse.text
+//         "initialCheckURL":  httpResponse.text
 //     },
 //         push_time: alertTime
 // },{ success: function() {
