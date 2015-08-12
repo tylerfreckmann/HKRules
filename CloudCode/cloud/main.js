@@ -1,6 +1,7 @@
 require('cloud/app.js')
 
 var baseSpeechURL = "http://tts-api.com/tts.mp3?q=";
+var speechPadding = ",,,,,".split(",").join("%2C");
 
 // Sets the alarm in the cloud, and notifies user of the result through push notifcation. 
 Parse.Cloud.define("setCloudAlarm", function(request, response) {
@@ -55,7 +56,8 @@ Parse.Cloud.define("showerStarted", function(request, response) {
     
     // Convert alert message to TTS URL to get mp3 to stream from
     var ttsURL = baseSpeechURL 
-        + "Alert Alert Alert Alert Alert You have showered for ".split(" ").join("%20") 
+        + speechPadding
+        + "Alert%2C You have showered for ".split(" ").join("%20") 
         + request.params.showerTime 
         + "&return_url=1";
     
@@ -99,9 +101,9 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
     pushQuery.equalTo("user", user);
     pushQuery.equalTo("appName", "HKRules");
      
-    // Get TTS mp3 from initial check message  
+    // Get TTS URL for  initial check message  
     var message = "%2C let me check if the house is safe right now".split(" ").join("%20");
-    var initialCheckURL =  baseSpeechURL + "Hi%20" + request.params.username + message + "&return_url=1";          
+    var initialCheckURL =  baseSpeechURL + speechPadding + "Hi%20" + request.params.username + message + "&return_url=1";          
 
     // Requests for the initial check TTS 
     Parse.Cloud.httpRequest({
@@ -134,12 +136,13 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                             }
 
                             var anyOpen = false; 
-                            // Loops through all sensors
+                            var listOpenSensors = [];
+                            // Loops through all sensors, and keeps track of them. 
                             for (i = 0; i < matches.length; i++) {
                                 var currentSensor = JSON.parse(matches[i]);
                                 if (currentSensor["value"] != "closed") {
                                     anyOpen = true;
-                                    console.log("You have an open sensor at " + currentSensor["name"] + "!");
+                                    listOpenSensors.push(("%2C Your " + currentSensor["name"] + " is open!").split(" ").join("%20"));
                                 }
                             }
 
@@ -148,25 +151,31 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                             if (!anyOpen) {
                                 checkedSecurityURL = 
                                     baseSpeechURL 
+                                    + speechPadding
                                     + "Hi%20" 
                                     + request.params.username 
-                                    + "%2C you do not have any open sensors. Your home is secured.".split(" ").join("%20")
+                                    + "%2C All of your sensors are closed. Your home is safe and secured.".split(" ").join("%20")
                                     + "&return_url=1";
                             }
                             else {
                                 checkedSecurityURL = 
                                     baseSpeechURL 
+                                    + speechPadding
                                     + "Hi%20" 
                                     + request.params.username 
-                                    + "%2C you have open sensors. Your home is not secured.".split(" ").join("%20")
-                                    + "&return_url=1";
+                                    + "%2C I am currently seeing some open sensors".split(" ").join("%20");
+
+                                for (i = 0; i < listOpenSensors.length; i++) {
+                                    checkedSecurityURL += listOpenSensors[i];
+                                }
+                                checkedSecurityURL += "&return_url=1";
                             }
 
                             // Get the MP3 security check TTS 
                             Parse.Cloud.httpRequest({
                                 url: checkedSecurityURL,
                                 success: function(checkedSecurityMP3) {
-                                    // Push to HKRules 
+                                    // // Push to HKRules 
                                     Parse.Push.send({
                                         where: pushQuery,
                                         data: {
@@ -177,13 +186,16 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                             "checkedSecurityURL": checkedSecurityMP3.text
                                         },
                                         push_time: alertTime
-                                    },{ success: function() {
-                                        response.success("push for " + request.params.username + " scheduled.");
                                     },
-                                        error: function(error) {
-                                        response.error("push errored");         
-                                    }
-                                    }); //end push
+                                        { success: function() {
+                                            response.success("push for " + request.params.username + " scheduled.");
+                                        }, error: function(error) {
+                                            response.error("push errored");         
+                                        }
+                                    // }); //end push
+
+                                    // Start fetching weather forecast
+                                    
                                 },
                                 error: function() {
                                     response.erorr("GET request failed for checkedSecurityRequest")
@@ -207,20 +219,9 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
         }
     });
 });
-                
-// Parse.Push.send({
-//     where: pushQuery,
-//     data: {
-//         "alert": "Checking for house TTS",
-//         "content-available": 1,
-//         "leaveFlag": 1, 
-//         "initialCheckURL":  httpResponse.text
-//     },
-//         push_time: alertTime
-// },{ success: function() {
-//     response.success("push for " + request.params.username + " scheduled.");
-// },
-//     error: function(error) {
-//     response.error("push errored");         
+
+// var method = function(url, erilc, tyler) {
+
 // }
-// }); //end push
+
+// method(funurl, f)
