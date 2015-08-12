@@ -114,38 +114,34 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
             // Request for the endpoint URL
             Parse.Cloud.httpRequest({
                 url: requestEndPointURL,
-                success: function(httpResponse) {
-                    var json = JSON.parse(httpResponse.text);
+                success: function(endPointResponse) {
+                    var json = JSON.parse(endPointResponse.text);
                     var endPointURL = json[0]["url"];
                     var apiCallURL = "https://graph.api.smartthings.com" + endPointURL;
 
                     // Get list of contact sensors (doors, windows, etc...)
-                    var checkSensorsURL = apiCallURL + "/contactSensors";
-                    console.log(checkSensorsURL);
-                    // Prints out 
-                    // https://graph.api.smartthings.com/api/smartapps/installations/7d1a8a2f-0bd6-473c-b19a-0a120546a9e0/contactSensors 
-                    // (which is right)
-
                     // Request for the sensors API call 
                     Parse.Cloud.httpRequest({
-                        url: checkSensorsURL,
+                        url: apiCallURL,
+                        params: "/contactSensors"
+                        followRedirects: true,
                         success: function(sensors) {
-                            response.success(sensors.text);
-                            // var sensorsJSON = JSON.parse(sensors.text);
-                            // // Loops through all sensors
-                            // for (i = 0; i < sensorsJSON.length; i++) {
-                            //     var currentSensor = sensorsJSON[i];
-                            //     if (currentSensor["value"] != "closed") {
-                            //         // You have an open sensor 
-                            //         console.log("You have an open sensor!");
-                            //     }
-                            //     else {
-                            //         console.log("Your sensors are closed, you are safe!");
-                            //     }
-                            // }
+                            // response.success(sensors.text);
+                            var sensorsJSON = JSON.parse(sensors.text);
+                            // Loops through all sensors
+                            for (i = 0; i < sensorsJSON.length; i++) {
+                                var currentSensor = sensorsJSON[i];
+                                if (currentSensor["value"] != "closed") {
+                                    // You have an open sensor 
+                                    console.log("You have an open sensor!");
+                                }
+                                else {
+                                    console.log("Your sensors are closed, you are safe!");
+                                }
+                            }
                         },
-                        error: function(httpResponse) {
-                            response.error("GET request failed for checkSensorsURL")
+                        error: function() {
+                            response.error("GET request failed for contactSensorsRequest")
                         }
                     });
                 },
@@ -166,6 +162,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
 //     data: {
 //         "alert": "Checking for house TTS",
 //         "content-available": 1,
+//         "leaveFlag": 1, 
 //         "initialCheckURL":  httpResponse.text
 //     },
 //         push_time: alertTime
