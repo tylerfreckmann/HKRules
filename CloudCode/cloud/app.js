@@ -20,7 +20,7 @@ app.set('view engine', 'ejs');    // Set the template engine
 app.use(express.bodyParser());    // Middleware for reading request body
 
 // Login with SmartThings.
-// When called, generate a request token and redirect the browser to GitHub.
+// When called, generate a request token and redirect the browser to SmartThings.
 app.get('/authorize', function(req, res) {
 	res.redirect('https://graph.api.smartthings.com/oauth/authorize?response_type=code&client_id='+smartThingsClientId+'&scope=app&redirect_uri='+oauthCallback);
 });

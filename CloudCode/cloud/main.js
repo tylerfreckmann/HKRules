@@ -53,10 +53,11 @@ Parse.Cloud.define("showerStarted", function(request, response) {
     pushQuery.equalTo("user", user);
     pushQuery.equalTo("appName", "HKRules")                   
     
+    // Convert alert message to TTS URL to get mp3 to stream from
     var ttsURL = baseSpeechURL 
-                + "Alert Alert Alert Alert Alert You have showered for ".split(" ").join("%20") 
-                + request.params.showerTime 
-                + "&return_url=1";
+        + "Alert Alert Alert Alert Alert You have showered for ".split(" ").join("%20") 
+        + request.params.showerTime 
+        + "&return_url=1";
     
     Parse.Cloud.httpRequest({
         url: ttsURL,
@@ -86,54 +87,134 @@ Parse.Cloud.define("showerStarted", function(request, response) {
 
 // Called when client is about to leave the house 
 Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
-    var userQuery = new Parse.Query(Parse.User);        
-    userQuery.equalTo("username", request.params.username);
+    var user = Parse.User.current();
 
-    userQuery.find({
-        success: function(users) {
-                   
-        // Get the current time
-        var alertTime = new Date();
-        alertTime.getHours();
-        alertTime.getMinutes();
-        alertTime.getSeconds();
+    // Get the current time
+    var alertTime = new Date();
+    alertTime.getHours();
+    alertTime.getMinutes();
+    alertTime.getSeconds();
+
+    var pushQuery = new Parse.Query(Parse.Installation);
+    pushQuery.equalTo("user", user);
+    pushQuery.equalTo("appName", "HKRules");
+     
+    // Get TTS mp3 from initial check message  
+    var message = "%2C let me check if the house is safe right now".split(" ").join("%20");
+    var initialCheckURL =  baseSpeechURL + "Hi%20" + request.params.username + message + "&return_url=1";          
+
+    // Requests for the initial check TTS 
+    Parse.Cloud.httpRequest({
+        url: initialCheckURL,
+        success: function(initialCheckMP3) {
+            // Check home security
+            var requestEndPointURL = "https://graph.api.smartthings.com/api/smartapps/endpoints?access_token=" 
+                + user.get("sttoken");
+            
+            // Request for the endpoint URL
+            Parse.Cloud.httpRequest({
+                url: requestEndPointURL,
+                success: function(endPointResponse) {
+                    var json = JSON.parse(endPointResponse.text);
+                    var endPointURL = json[0]["url"];
+                    var apiCallURL = "https://graph.api.smartthings.com" + endPointURL;
+                    var checkSensorsURL = apiCallURL + "/contactSensors?access_token=" + user.get("sttoken");
+
+                    // Get list of contact sensors (doors, windows, etc...)
+                    // Request for the sensors API call 
+                    Parse.Cloud.httpRequest({
+                        url: checkSensorsURL,
+                        success: function(sensors) {
+                            // Break up the list of sensors into JSON strings (based on [...])
+                            var matches = [];
+                            var pattern = /\[(.*?)\]/g;
+                            var match;
+                            while ((match = pattern.exec(sensors.text)) != null) {
+                                matches.push(match[1]);
+                            }
+
+                            var anyOpen = false; 
+                            // Loops through all sensors
+                            for (i = 0; i < matches.length; i++) {
+                                var currentSensor = JSON.parse(matches[i]);
+                                if (currentSensor["value"] != "closed") {
+                                    anyOpen = true;
+                                    console.log("You have an open sensor at " + currentSensor["name"] + "!");
+                                }
+                            }
+
+                            // Create the TTS url for the final security check
+                            var checkedSecurityURL; 
+                            if (!anyOpen) {
+                                checkedSecurityURL = 
+                                    baseSpeechURL 
+                                    + "Hi%20" 
+                                    + request.params.username 
+                                    + "%2C you do not have any open sensors. Your home is secured.".split(" ").join("%20")
+                                    + "&return_url=1";
+                            }
+                            else {
+                                checkedSecurityURL = 
+                                    baseSpeechURL 
+                                    + "Hi%20" 
+                                    + request.params.username 
+                                    + "%2C you have open sensors. Your home is not secured.".split(" ").join("%20")
+                                    + "&return_url=1";
+                            }
+
+                            // Get the MP3 security check TTS 
+                            Parse.Cloud.httpRequest({
+                                url: checkedSecurityURL,
+                                success: function(checkedSecurityMP3) {
+                                    // Push to HKRules 
+                                    Parse.Push.send({
+                                        where: pushQuery,
+                                        data: {
+                                            "alert": "Checking for house TTS",
+                                            "content-available": 1,
+                                            "leaveFlag": 1, 
+                                            "initialCheckURL":  initialCheckMP3.text,
+                                            "checkedSecurityURL": checkedSecurityMP3.text
+                                        },
+                                        push_time: alertTime
+                                    },{ success: function() {
+                                        response.success("push for " + request.params.username + " scheduled.");
+                                    },
+                                        error: function(error) {
+                                        response.error("push errored");         
+                                    }
+                                    }); //end push
+                                },
+                                error: function() {
+                                    response.erorr("GET request failed for checkedSecurityRequest")
+                                }
+                            });
                             
-        // Init the push query
-        var pushQuery = new Parse.Query(Parse.Installation);
-        pushQuery.equalTo("user", users[0]);
-        pushQuery.equalTo("appName", "HKRules")
-         
-        var message = "%2C let me check if the house is safe right now".split(" ").join("%20")
-        var initialCheckURL =  baseSpeechURL + "Hi%20" + request.params.username + message + "&return_url=1"          
-                   
-        Parse.Cloud.httpRequest({
-            url: initialCheckURL,
-            success: function(httpResponse) {
-                // Able to GET intialCheckURL
-
-
-            },
-            error: function(httpResponse) {
-                response.error("GET request failed for initialCheckURL")
-            }
-        });
-                   
-    },
-        error: function(error) {
-            response.error("user find query errored");
+                        },
+                        error: function() {
+                            response.error("GET request failed for contactSensorsRequest")
+                        }
+                    });
+                        
+                },
+                error: function() {
+                    response.error("GET request failed for requestEndPointURL");
+                }
+            });
+        },
+        error: function() {
+            response.error("GET request failed for initialCheckURL");
         }
-                   
     });
 });
-
-
                 
 // Parse.Push.send({
 //     where: pushQuery,
 //     data: {
 //         "alert": "Checking for house TTS",
 //         "content-available": 1,
-//         "ttsURL":  httpResponse.text
+//         "leaveFlag": 1, 
+//         "initialCheckURL":  httpResponse.text
 //     },
 //         push_time: alertTime
 // },{ success: function() {

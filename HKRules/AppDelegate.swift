@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  HKRules
 //
-//  Created by Tyler Freckmann on 7/29/15.
+//  Created by Tyler Freckmann, Eric Tran on 7/29/15.
 //  Copyright (c) 2015 Tyler Freckmann. All rights reserved.
 //
 
@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        println("notification")
+        println("Push notification received.")
         if let soundAlarm: AnyObject = userInfo["soundAlarm"] {
             println(userInfo)
             
@@ -102,15 +102,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if let alertURL: AnyObject = userInfo["ttsURL"] {
-            // play tts throgugh playStreamng 
+            // Play TTS shower alert through playStreamng
             HKWControlHandler.sharedInstance().playStreamingMedia(alertURL as! String, withCallback: { bool in
-                println(bool)
                 println(alertURL)
-                println("Can play!")
+                println("Playing shower TTS...")
             } )
         }
         
+        if let leaveFlag: AnyObject = userInfo["leaveFlag"] {
+            // Received a notification from prepareToLeaveHouse event triggered in cloud
+            
+            // Play initial check TTS through playStreaming
+            let initialCheckURL: AnyObject = userInfo["initialCheckURL"]!
+            HKWControlHandler.sharedInstance().playStreamingMedia(initialCheckURL as! String, withCallback: { bool in
+                println("Playing initial leave house check TTS...")
+            } )
+            
+            let finalCheckURL: AnyObject = userInfo["checkedSecurityURL"]!
+            var securityTimer = NSTimer(timeInterval: 7, target: self, selector: "playFinalSecurity:", userInfo: finalCheckURL, repeats: false)
+        }
+        
         completionHandler(UIBackgroundFetchResult.NewData)
+    }
+    
+    func playFinalSecurity(timer: NSTimer) {
+        HKWControlHandler.sharedInstance().playStreamingMedia(timer.userInfo as! String, withCallback: { bool in
+            println("Playing checkSecurity TTS...")
+        } )
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
