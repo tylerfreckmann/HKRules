@@ -44,14 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
         sleepPreventer = MMPDeepSleepPreventer()
         sleepPreventer.startPreventSleep()
         
-        // Flip alreadyReacted Bool if launching by tapping notification
-        if launchOptions != nil && launchOptions![UIApplicationLaunchOptionsRemoteNotificationKey] != nil {
-            println("Launching from remote notification")
-            alreadyReacted = true
-            println(launchOptions![UIApplicationLaunchOptionsRemoteNotificationKey])
-        } else {
-            alreadyReacted = false
-        }
+        // Initialize alreadyReacted flag
+        alreadyReacted = false
         
         // Initialize trackQueue
         tracksQueue = [String]()
@@ -81,11 +75,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        println("Push notification received.")
-        println("Notification:")
-        println(userInfo)
         
         if !alreadyReacted {
+            alreadyReacted = true
+            println("Push notification received.")
+            println("Notification:")
+            println(userInfo)
             
             if let soundAlarm: AnyObject = userInfo["soundAlarm"] {
                 // Play sound
@@ -103,6 +98,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                     var assetURL = item.assetURL
                     println("Played alarm song? \(HKWControlHandler.sharedInstance().playCAF(assetURL, songName: item.title, resumeFlag: false))")
                 }
+                
+                // Position app to open at Stop View Controller
+                
             }
             
             if let alertURL: AnyObject = userInfo["ttsURL"] {

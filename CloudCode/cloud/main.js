@@ -191,7 +191,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                         }, error: function(error) {
                                             response.error("push errored");         
                                         }
-                                    // }); //end push
+                                    }); //end push
 
                                     // Start fetching weather forecast
                                     

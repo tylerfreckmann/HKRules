@@ -13,8 +13,8 @@ class ChooseScenarioViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -44,7 +44,7 @@ class ChooseScenarioViewController: UIViewController {
             })
         }
         
-        
+        // If alarm is playing
     }
 
     override func didReceiveMemoryWarning() {

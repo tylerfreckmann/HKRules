@@ -10,8 +10,19 @@ import UIKit
 
 class StopAlarmViewController: UIViewController {
 
+    var alarm: [NSObject : AnyObject]?
+    
+    convenience init() {
+        self.init(alarm: nil)
+    }
+    
+    init(alarm: [NSObject : AnyObject]?) {
+        self.alarm = alarm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
     required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {

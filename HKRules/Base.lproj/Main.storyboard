@@ -97,7 +97,7 @@
         <!--Stop Alarm-->
         <scene sceneID="xP3-Bz-xLK">
             <objects>
-                <viewController title="Stop Alarm" id="PUt-c6-AeY" userLabel="Stop Alarm" sceneMemberID="viewController">
+                <viewController title="Stop Alarm" id="PUt-c6-AeY" userLabel="Stop Alarm" customClass="StopAlarmViewController" customModule="HKRules" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="KJm-eb-ylb"/>
                         <viewControllerLayoutGuide type="bottom" id="BeX-XC-4Nn"/>
@@ -122,7 +122,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fEa-D3-CaF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1772" y="1107"/>
+            <point key="canvasLocation" x="2640" y="-1102"/>
         </scene>
         <!--Wake Up-->
         <scene sceneID="c2V-fR-VYi">
@@ -173,6 +173,7 @@
                         <segue destination="Ooe-UY-pA7" kind="show" identifier="chooseAlarmSound" id="wHS-Rx-8rd"/>
                         <segue destination="MvL-Fg-7rQ" kind="show" identifier="customText" id="92r-U7-yPs"/>
                         <segue destination="EQn-qb-ize" kind="show" identifier="smartThings" id="EI0-hS-NaW"/>
+                        <segue destination="PUt-c6-AeY" kind="show" identifier="stopAlarm" id="Uh3-9J-Crs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6x9-rY-8gG" userLabel="First Responder" sceneMemberID="firstResponder"/>
