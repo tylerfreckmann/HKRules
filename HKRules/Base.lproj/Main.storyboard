@@ -122,6 +122,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="2p1-M2-pgn">
+                                <rect key="frame" x="140" y="28" width="320" height="162"/>
+                                <date key="date" timeIntervalSinceReferenceDate="459983268.90666997">
+                                    <!--2015-07-30 21:07:48 +0000-->
+                                </date>
+                            </datePicker>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="9RJ-oH-6KC">
+                                <rect key="frame" x="150" y="198" width="300" height="300"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VvQ-Bo-9LX">
                                 <rect key="frame" x="285" y="550" width="30" height="30"/>
                                 <state key="normal" title="Set">
@@ -131,30 +141,15 @@
                                     <action selector="setAlarm:" destination="ITx-2k-0jM" eventType="touchUpInside" id="eEa-d8-upp"/>
                                 </connections>
                             </button>
-                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="2p1-M2-pgn">
-                                <rect key="frame" x="140" y="72" width="320" height="162"/>
-                                <date key="date" timeIntervalSinceReferenceDate="459983268.90666997">
-                                    <!--2015-07-30 21:07:48 +0000-->
-                                </date>
-                            </datePicker>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="9RJ-oH-6KC">
-                                <rect key="frame" x="150" y="242" width="300" height="300"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="QB5-Cu-M5Z"/>
-                                    <constraint firstAttribute="height" constant="300" id="bVQ-vb-Iuu"/>
-                                </constraints>
-                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="9RJ-oH-6KC" secondAttribute="centerX" id="4WK-zE-CB9"/>
-                            <constraint firstAttribute="centerX" secondItem="2p1-M2-pgn" secondAttribute="centerX" id="7uw-rc-mmV"/>
-                            <constraint firstItem="2p1-M2-pgn" firstAttribute="top" secondItem="F9N-JQ-MBe" secondAttribute="bottom" constant="52" id="KLE-GW-WRD"/>
-                            <constraint firstItem="9RJ-oH-6KC" firstAttribute="top" secondItem="2p1-M2-pgn" secondAttribute="bottom" constant="8" id="PWz-6O-WXr"/>
-                            <constraint firstItem="aVC-9r-apN" firstAttribute="top" secondItem="VvQ-Bo-9LX" secondAttribute="bottom" constant="20" id="asT-OQ-rDu"/>
-                            <constraint firstItem="VvQ-Bo-9LX" firstAttribute="top" secondItem="9RJ-oH-6KC" secondAttribute="bottom" constant="8" id="cGZ-hv-bOh"/>
-                            <constraint firstAttribute="centerX" secondItem="VvQ-Bo-9LX" secondAttribute="centerX" id="cgz-fY-Wn6"/>
+                            <constraint firstItem="9RJ-oH-6KC" firstAttribute="top" secondItem="2p1-M2-pgn" secondAttribute="bottom" constant="8" id="4uy-Bm-2qm"/>
+                            <constraint firstItem="aVC-9r-apN" firstAttribute="top" secondItem="VvQ-Bo-9LX" secondAttribute="bottom" constant="20" id="6ud-3N-buS"/>
+                            <constraint firstAttribute="centerX" secondItem="2p1-M2-pgn" secondAttribute="centerX" id="Dha-dO-KIV"/>
+                            <constraint firstAttribute="centerX" secondItem="9RJ-oH-6KC" secondAttribute="centerX" id="bwG-OS-kCH"/>
+                            <constraint firstAttribute="centerX" secondItem="VvQ-Bo-9LX" secondAttribute="centerX" id="nSe-mi-q6t"/>
+                            <constraint firstItem="2p1-M2-pgn" firstAttribute="top" secondItem="F9N-JQ-MBe" secondAttribute="bottom" constant="8" id="zXL-Tm-TLL"/>
                         </constraints>
                     </view>
                     <connections>
