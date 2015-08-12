@@ -118,9 +118,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 println("Playing initial leave house check TTS...")
             } )
             
+            let finalCheckURL: AnyObject = userInfo["checkedSecurityURL"]!
+            var securityTimer = NSTimer(timeInterval: 7, target: self, selector: "playFinalSecurity:", userInfo: finalCheckURL, repeats: false)
         }
         
         completionHandler(UIBackgroundFetchResult.NewData)
+    }
+    
+    func playFinalSecurity(timer: NSTimer) {
+        HKWControlHandler.sharedInstance().playStreamingMedia(timer.userInfo as! String, withCallback: { bool in
+            println("Playing checkSecurity TTS...")
+        } )
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
