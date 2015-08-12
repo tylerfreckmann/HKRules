@@ -1,5 +1,6 @@
 require('cloud/app.js')
 
+var weatherAPIKey = "2746bc27d6d47ddd627f76d17870dab3";
 var baseSpeechURL = "http://tts-api.com/tts.mp3?q=";
 var speechPadding = ",,,,,".split(",").join("%2C");
 
@@ -175,30 +176,46 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                             Parse.Cloud.httpRequest({
                                 url: checkedSecurityURL,
                                 success: function(checkedSecurityMP3) {
-                                    // // Push to HKRules 
-                                    Parse.Push.send({
-                                        where: pushQuery,
-                                        data: {
-                                            "alert": "Checking for house TTS",
-                                            "content-available": 1,
-                                            "leaveFlag": 1, 
-                                            "initialCheckURL":  initialCheckMP3.text,
-                                            "checkedSecurityURL": checkedSecurityMP3.text
-                                        },
-                                        push_time: alertTime
-                                    },
-                                        { success: function() {
-                                            response.success("push for " + request.params.username + " scheduled.");
-                                        }, error: function(error) {
-                                            response.error("push errored");         
-                                        }
+                                    // Push to HKRules 
+                                    // Parse.Push.send({
+                                    //     where: pushQuery,
+                                    //     data: {
+                                    //         "alert": "Checking for house TTS",
+                                    //         "content-available": 1,
+                                    //         "leaveFlag": 1, 
+                                    //         "initialCheckURL":  initialCheckMP3.text,
+                                    //         "checkedSecurityURL": checkedSecurityMP3.text
+                                    //     },
+                                    //     push_time: alertTime
+                                    // },
+                                    //     { success: function() {
+                                    //         response.success("push for " + request.params.username + " scheduled.");
+                                    //     }, error: function(error) {
+                                    //         response.error("push errored");         
+                                    //     }
                                     // }); //end push
 
                                     // Start fetching weather forecast
+                                    var weatherURL = "https://api.forecast.io/forecast/" 
+                                        + weatherAPIKey 
+                                        + "/" + request.params.locationLatitude 
+                                        + "," + request.params.locationLongitude;  
+
+                                    // Get the weather format in JSON 
+                                    Parse.Cloud.httpRequest( {
+                                        url: weatherURL, 
+                                        success: function(weatherJSON) {
+                                            var weatherJson = JSON.parse(weatherJSON.text);
+                                            response.success(weatherJSON.text);
+                                        }, 
+                                        error: function () {
+                                            response.error("GET request failed for weatherURL");
+                                        }
+                                    });
                                     
                                 },
                                 error: function() {
-                                    response.erorr("GET request failed for checkedSecurityRequest")
+                                    response.error("GET request failed for checkedSecurityRequest")
                                 }
                             });
                             
