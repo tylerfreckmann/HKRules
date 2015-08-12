@@ -14,8 +14,8 @@ import MediaPlayer
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var sleepPreventer : MMPDeepSleepPreventer!
-
+    var sleepPreventer: MMPDeepSleepPreventer!
+    var securityTimer: NSTimer!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -119,7 +119,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } )
             
             let finalCheckURL: AnyObject = userInfo["checkedSecurityURL"]!
-            var securityTimer = NSTimer(timeInterval: 7, target: self, selector: "playFinalSecurity:", userInfo: finalCheckURL, repeats: false)
+            
+            let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+            dispatch_async(dispatch_get_global_queue(priority, 0)) {
+                // do some task
+                HKWControlHandler.sharedInstance().playStreamingMedia(finalCheckURL as! String, withCallback: { bool in
+                    println("Playing checkSecurity TTS...")
+                } )
+                dispatch_async(dispatch_get_main_queue()) {
+                    // update some UI
+                }
+            }
+            
+            //var securityTimer = NSTimer(timeInterval: 7, target: self, selector: "playFinalSecurity:", userInfo: finalCheckURL, repeats: false)
         }
         
         completionHandler(UIBackgroundFetchResult.NewData)
