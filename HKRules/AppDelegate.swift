@@ -11,10 +11,12 @@ import Parse
 import MediaPlayer
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDelegate {
 
     var window: UIWindow?
     var sleepPreventer: MMPDeepSleepPreventer!
+    var alreadyReacted: Bool!
+    var tracksQueue: [String]!
     var securityTimer: NSTimer!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -28,31 +30,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Parse.setApplicationId("q0zDsAFXiBtK2FFHMwBnsqWvqsNBZcJJy3GFL9xa",
             clientKey: "YCaxY5KPgHdrGLZoUUwReGIyqEyAtAVFc0r0Mkb3")
         
-        // Configure Push notification types
-        // Action
-        var stopAlarmSoundAction = UIMutableUserNotificationAction()
-        stopAlarmSoundAction.identifier = "STOP_ALARM_SOUND"
-        stopAlarmSoundAction.title = "Good Morning!"
-        stopAlarmSoundAction.activationMode = UIUserNotificationActivationMode.Foreground
-        stopAlarmSoundAction.destructive = false
-        // Category
-        var stopAlarmSoundCategory = UIMutableUserNotificationCategory()
-        stopAlarmSoundCategory.identifier = "STOP_ALARM_SOUND_CATEGORY"
-        stopAlarmSoundCategory.setActions([stopAlarmSoundAction], forContext: UIUserNotificationActionContext.Minimal)
-        
         
         // Register for Push Notitications
         if application.respondsToSelector("registerUserNotificationSettings:") {
             let userNotificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound
-            let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: [stopAlarmSoundCategory])
+            let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: nil)
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()
-            println("did register for remote notifications")
+            println("Did register for remote notifications.")
         }
         
         // prevent from turning into background
         sleepPreventer = MMPDeepSleepPreventer()
         sleepPreventer.startPreventSleep()
+        
+        // Flip alreadyReacted Bool if launching by tapping notification
+        if launchOptions != nil && launchOptions![UIApplicationLaunchOptionsRemoteNotificationKey] != nil {
+            println("Launching from remote notification")
+            alreadyReacted = true
+            println(launchOptions![UIApplicationLaunchOptionsRemoteNotificationKey])
+        } else {
+            alreadyReacted = false
+        }
+        
+        // Initialize trackQueue
+        tracksQueue = [String]()
+        
+        // Set player event handler delegate
+        HKWPlayerEventHandlerSingleton.sharedInstance().delegate = self
         
         return true
     }
@@ -77,18 +82,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         println("Push notification received.")
-        if let soundAlarm: AnyObject = userInfo["soundAlarm"] {
-            println(userInfo)
+        println("Notification:")
+        println(userInfo)
+        
+        if !alreadyReacted {
             
-            if !HKWControlHandler.sharedInstance().isPlaying() {
+            if let soundAlarm: AnyObject = userInfo["soundAlarm"] {
                 // Play sound
                 let soundFile = userInfo["soundFile"] as! String
                 if soundFile == "alarm" {
                     let nsWavPath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alarm.wav")
                     let url = NSURL(fileURLWithPath: nsWavPath)
-                    println(HKWControlHandler.sharedInstance().playWAV(nsWavPath))
-                    println(nsWavPath)
-                    var timer = NSTimer(timeInterval: 10, target: self, selector: "stop", userInfo: nil, repeats: false)
+                    println("Played alarm sound? \(HKWControlHandler.sharedInstance().playWAV(nsWavPath))")
                 } else {
                     let query = MPMediaQuery.songsQuery()
                     let predicate = MPMediaPropertyPredicate(value: soundFile, forProperty: MPMediaItemPropertyPersistentID)
@@ -96,66 +101,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                     let item = query.items.first as! MPMediaItem
                     var assetURL = item.assetURL
-                    println(HKWControlHandler.sharedInstance().playCAF(assetURL, songName: item.title, resumeFlag: false))
-                }
-            }
-        }
-        
-        if let alertURL: AnyObject = userInfo["ttsURL"] {
-            // Play TTS shower alert through playStreamng
-            HKWControlHandler.sharedInstance().playStreamingMedia(alertURL as! String, withCallback: { bool in
-                println(alertURL)
-                println("Playing shower TTS...")
-            } )
-        }
-        
-        if let leaveFlag: AnyObject = userInfo["leaveFlag"] {
-            // Received a notification from prepareToLeaveHouse event triggered in cloud
-            
-            // Play initial check TTS through playStreaming
-            let initialCheckURL: AnyObject = userInfo["initialCheckURL"]!
-            HKWControlHandler.sharedInstance().playStreamingMedia(initialCheckURL as! String, withCallback: { bool in
-                println("Playing initial leave house check TTS...")
-            } )
-            
-            let finalCheckURL: AnyObject = userInfo["checkedSecurityURL"]!
-            
-            let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-            dispatch_async(dispatch_get_global_queue(priority, 0)) {
-                var securityTimer = NSTimer(timeInterval: 7, target: self, selector: "playFinalSecurity:", userInfo: finalCheckURL, repeats: false)
-                dispatch_async(dispatch_get_main_queue()) {
-                    // update some UI
+                    println("Played alarm song? \(HKWControlHandler.sharedInstance().playCAF(assetURL, songName: item.title, resumeFlag: false))")
                 }
             }
             
-            //var securityTimer = NSTimer(timeInterval: 7, target: self, selector: "playFinalSecurity:", userInfo: finalCheckURL, repeats: false)
+            if let alertURL: AnyObject = userInfo["ttsURL"] {
+                // Play TTS shower alert through playStreamng
+                HKWControlHandler.sharedInstance().playStreamingMedia(alertURL as! String, withCallback: { bool in
+                    println(alertURL)
+                    println("Playing shower TTS...")
+                } )
+            }
+            
+            if let leaveFlag: AnyObject = userInfo["leaveFlag"] {
+                // Received a notification from prepareToLeaveHouse event triggered in cloud
+                
+                // Play initial check TTS through playStreaming
+                let initialCheckURL = userInfo["initialCheckURL"]! as! String
+                tracksQueue.append(initialCheckURL)
+                playFromQueue()
+                println("Added initial leave house check TTS to queue")
+                
+                let finalCheckURL = userInfo["checkedSecurityURL"]! as! String
+                tracksQueue.append(finalCheckURL)
+                println("Added checkSecurity TTS to queue")
+            }
         }
         
         completionHandler(UIBackgroundFetchResult.NewData)
     }
     
-    func playFinalSecurity(timer: NSTimer) {
-        HKWControlHandler.sharedInstance().playStreamingMedia(timer.userInfo as! String, withCallback: { bool in
-            println("Playing checkSecurity TTS...")
-        } )
+    func playFromQueue() {
+        if !HKWControlHandler.sharedInstance().isPlaying() {
+            let track = tracksQueue.removeAtIndex(0)
+            if track.hasPrefix("http") {
+                HKWControlHandler.sharedInstance().playStreamingMedia(track, withCallback: { (success) -> Void in
+                    println("PLAY FROM QUEUE \(track)? \(success)")
+                })
+            } else {
+                HKWControlHandler.sharedInstance().playCAF(NSURL(fileURLWithPath: track), songName: "", resumeFlag: false)
+            }
+        }
     }
     
-    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
-        println("handling action")
-        println(identifier)
-        println(userInfo)
-        HKWControlHandler.sharedInstance().stop()
-        completionHandler()
+    func hkwPlayEnded() {
+        println("playing next song")
+        if tracksQueue.count != 0 {
+            playFromQueue()
+        }
     }
-    
-    func stop() {
-        println("stopped")
-        HKWControlHandler.sharedInstance().stop()
-    }
-    
-//    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-//        PFPush.handlePush(userInfo)
-//    }
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
