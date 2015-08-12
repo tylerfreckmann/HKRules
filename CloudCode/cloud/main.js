@@ -185,6 +185,8 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                     weatherMessage = weatherMessage.split(" ").join("%20"); 
                                     var recapMessageURL = finalMessage + weatherMessage + "&return_url=1";
 
+                                    console.log("recapMessageURL: " + recapMessageURL);
+
                                     Parse.Cloud.httpRequest({
                                         url: recapMessageURL,
                                         success: function(recapMessageMP3) {
