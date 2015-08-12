@@ -99,8 +99,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                     println("Played alarm song? \(HKWControlHandler.sharedInstance().playCAF(assetURL, songName: item.title, resumeFlag: false))")
                 }
                 
-                // Position app to open at Stop View Controller
-                
+                // Notify app that alarm went off
+                let notification = NSNotification(name: "AlarmFiredNotification", object: self)
+                NSNotificationCenter.defaultCenter().postNotification(notification)
             }
             
             if let alertURL: AnyObject = userInfo["ttsURL"] {

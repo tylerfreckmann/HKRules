@@ -20,6 +20,9 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        // Register for notification about alarm firing
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleAlarmFired", name: "AlarmFiredNotification", object: nil)
+        
         // Initialize User
         user = PFUser.currentUser()!
         
@@ -174,6 +177,10 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let test = response as? String
             println(test)
         }
+    }
+    
+    func handleAlarmFired() {
+        self.performSegueWithIdentifier("stopAlarm", sender: nil)
     }
     
     /*
