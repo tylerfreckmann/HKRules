@@ -175,24 +175,6 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                             Parse.Cloud.httpRequest({
                                 url: checkedSecurityURL,
                                 success: function(checkedSecurityMP3) {
-                                    // Push to HKRules 
-                                    // Parse.Push.send({
-                                    //     where: pushQuery,
-                                    //     data: {
-                                    //         "alert": "Checking for house TTS",
-                                    //         "content-available": 1,
-                                    //         "leaveFlag": 1, 
-                                    //         "initialCheckURL":  initialCheckMP3.text,
-                                    //         "checkedSecurityURL": checkedSecurityMP3.text
-                                    //     },
-                                    //     push_time: alertTime
-                                    // },
-                                    //     { success: function() {
-                                    //         response.success("push for " + request.params.username + " scheduled.");
-                                    //     }, error: function(error) {
-                                    //         response.error("push errored");         
-                                    //     }
-                                    // }); //end push
 
                                     // Start fetching weather forecast
                                     var weatherURL = "https://api.forecast.io/forecast/" 
@@ -205,7 +187,41 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                         url: weatherURL, 
                                         success: function(weatherJSON) {
                                             var weatherJson = JSON.parse(weatherJSON.text);
-                                            response.success(weatherJSON.text);
+                                            var weatherMessage = "Today, the weather is " 
+                                                + weatherJson["currently"]["summary"]
+                                                + ".%2C%2C%2C The chance of it raining is " + weatherJson["currently"]["precipProbability"] + " percent." ;
+                                            weatherMessage = weatherMessage.split(" ").join("%20"); 
+                                            var weatherMessageURL = baseSpeechURL + speechPadding + weatherMessage + "&return_url=1";
+                                            console.log(weatherMessageURL);
+                                            Parse.Cloud.httpRequest({
+                                                url: weatherMessageURL,
+                                                success: function(weatherMessageMP3) {
+
+                                                // Push to HKRules 
+                                                Parse.Push.send({
+                                                    where: pushQuery,
+                                                    data: {
+                                                        "alert": "Checking for house TTS",
+                                                        "content-available": 1,
+                                                        "leaveFlag": 1, 
+                                                        "initialCheckURL":  initialCheckMP3.text,
+                                                        "checkedSecurityURL": checkedSecurityMP3.text,
+                                                        "weatherMessageURL": weatherMessageMP3.text
+                                                    },
+                                                    push_time: alertTime
+                                                },
+                                                    { success: function() {
+                                                        response.success("push for " + request.params.username + " scheduled.");
+                                                    }, error: function(error) {
+                                                        response.error("push errored");         
+                                                    }
+                                                }); //end push
+
+                                                },
+                                                error: function() {
+                                                    response.error("GET request failed for weatherMessageMP3");
+                                                }
+                                            });
                                         }, 
                                         error: function () {
                                             response.error("GET request failed for weatherURL");

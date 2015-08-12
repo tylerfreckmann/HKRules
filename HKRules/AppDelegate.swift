@@ -113,9 +113,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                 } )
             }
             
-            if let leaveFlag: AnyObject = userInfo["leaveFlag"] {
+            if userInfo["leaveFlag"] != nil {
                 // Received a notification from prepareToLeaveHouse event triggered in cloud
-                
                 // Play initial check TTS through playStreaming
                 let initialCheckURL = userInfo["initialCheckURL"]! as! String
                 tracksQueue.append(initialCheckURL)
@@ -125,7 +124,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                 let finalCheckURL = userInfo["checkedSecurityURL"]! as! String
                 tracksQueue.append(finalCheckURL)
                 println("Added checkSecurity TTS to queue")
+                
+                let weatherMessageURL = userInfo["weatherMessageURL"]! as! String
+                tracksQueue.append(weatherMessageURL)
+                println("Added weatherMessafe TTS to queue")
             }
+            
         }
         
         completionHandler(UIBackgroundFetchResult.NewData)
