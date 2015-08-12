@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Register for Push Notitications
         if application.respondsToSelector("registerUserNotificationSettings:") {
             let userNotificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound
-            let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: Set(arrayLiteral: [stopAlarmSoundCategory]))
+            let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: [stopAlarmSoundCategory])
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()
             println("did register for remote notifications")
