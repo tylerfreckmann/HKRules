@@ -1,6 +1,7 @@
 require('cloud/app.js')
 
 var baseSpeechURL = "http://tts-api.com/tts.mp3?q=";
+var speechPadding = ",,,,,,".split(",").join("%2C");
 
 // Sets the alarm in the cloud, and notifies user of the result through push notifcation. 
 Parse.Cloud.define("setCloudAlarm", function(request, response) {
@@ -55,7 +56,8 @@ Parse.Cloud.define("showerStarted", function(request, response) {
     
     // Convert alert message to TTS URL to get mp3 to stream from
     var ttsURL = baseSpeechURL 
-        + "Alert Alert Alert Alert Alert You have showered for ".split(" ").join("%20") 
+        + speechPadding
+        + "Alert%2C You have showered for ".split(" ").join("%20") 
         + request.params.showerTime 
         + "&return_url=1";
     
@@ -101,7 +103,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
      
     // Get TTS mp3 from initial check message  
     var message = "%2C let me check if the house is safe right now".split(" ").join("%20");
-    var initialCheckURL =  baseSpeechURL + "Hi%20" + request.params.username + message + "&return_url=1";          
+    var initialCheckURL =  baseSpeechURL + speechPadding + "Hi%20" + request.params.username + message + "&return_url=1";          
 
     // Requests for the initial check TTS 
     Parse.Cloud.httpRequest({
@@ -148,6 +150,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                             if (!anyOpen) {
                                 checkedSecurityURL = 
                                     baseSpeechURL 
+                                    + speechPadding
                                     + "Hi%20" 
                                     + request.params.username 
                                     + "%2C you do not have any open sensors. Your home is secured.".split(" ").join("%20")
@@ -156,6 +159,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                             else {
                                 checkedSecurityURL = 
                                     baseSpeechURL 
+                                    + speechPadding
                                     + "Hi%20" 
                                     + request.params.username 
                                     + "%2C you have open sensors. Your home is not secured.".split(" ").join("%20")
@@ -177,12 +181,12 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                             "checkedSecurityURL": checkedSecurityMP3.text
                                         },
                                         push_time: alertTime
-                                    },{ success: function() {
-                                        response.success("push for " + request.params.username + " scheduled.");
                                     },
-                                        error: function(error) {
-                                        response.error("push errored");         
-                                    }
+                                        { success: function() {
+                                            response.success("push for " + request.params.username + " scheduled.");
+                                        }, error: function(error) {
+                                            response.error("push errored");         
+                                        }
                                     }); //end push
                                 },
                                 error: function() {
