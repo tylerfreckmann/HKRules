@@ -120,13 +120,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                 playFromQueue()
                 println("Added initial leave house check TTS to queue")
                 
-                let finalCheckURL = userInfo["checkedSecurityURL"]! as! String
+                let finalCheckURL = userInfo["recapMessageURL"]! as! String
                 tracksQueue.append(finalCheckURL)
                 println("Added checkSecurity TTS to queue")
                 
-                let weatherMessageURL = userInfo["weatherMessageURL"]! as! String
-                tracksQueue.append(weatherMessageURL)
-                println("Added weatherMessafe TTS to queue")
+//                let weatherMessageURL = userInfo["weatherMessageURL"]! as! String
+//                tracksQueue.append(weatherMessageURL)
+//                println("Added weatherMessafe TTS to queue")
             }
             
         }

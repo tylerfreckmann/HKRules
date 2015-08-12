@@ -102,8 +102,10 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
     pushQuery.equalTo("appName", "HKRules");
      
     // Get TTS URL for  initial check message  
-    var message = "%2C let me check if the house is safe right now".split(" ").join("%20");
+    var message = "%2C let me check if the house is safe right now. Give me a second or two.".split(" ").join("%20");
     var initialCheckURL =  baseSpeechURL + speechPadding + "Hi%20" + request.params.username + message + "&return_url=1";          
+
+    var finalMessage = "";
 
     // Requests for the initial check TTS 
     Parse.Cloud.httpRequest({
@@ -123,7 +125,6 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                     var checkSensorsURL = apiCallURL + "/contactSensors?access_token=" + user.get("sttoken");
 
                     // Get list of contact sensors (doors, windows, etc...)
-                    // Request for the sensors API call 
                     Parse.Cloud.httpRequest({
                         url: checkSensorsURL,
                         success: function(sensors) {
@@ -146,19 +147,16 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                 }
                             }
 
-                            // Create the TTS url for the final security check
-                            var checkedSecurityURL; 
                             if (!anyOpen) {
-                                checkedSecurityURL = 
+                                finalMessage = 
                                     baseSpeechURL 
                                     + speechPadding
                                     + "Hi%20" 
                                     + request.params.username 
                                     + "%2C All of your sensors are closed. Your home is safe and secured.".split(" ").join("%20")
-                                    + "&return_url=1";
                             }
                             else {
-                                checkedSecurityURL = 
+                                finalMessage =  
                                     baseSpeechURL 
                                     + speechPadding
                                     + "Hi%20" 
@@ -166,72 +164,61 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                     + "%2C I am currently seeing some open sensors".split(" ").join("%20");
 
                                 for (i = 0; i < listOpenSensors.length; i++) {
-                                    checkedSecurityURL += listOpenSensors[i];
+                                    finalMessage += listOpenSensors[i];
                                 }
-                                checkedSecurityURL += "&return_url=1";
                             }
 
-                            // Get the MP3 security check TTS 
-                            Parse.Cloud.httpRequest({
-                                url: checkedSecurityURL,
-                                success: function(checkedSecurityMP3) {
 
+                            // Start fetching weather forecast
+                            var weatherURL = "https://api.forecast.io/forecast/" 
+                                + weatherAPIKey 
+                                + "/" + request.params.locationLatitude 
+                                + "," + request.params.locationLongitude;  
 
-                                    // Start fetching weather forecast
-                                    var weatherURL = "https://api.forecast.io/forecast/" 
-                                        + weatherAPIKey 
-                                        + "/" + request.params.locationLatitude 
-                                        + "," + request.params.locationLongitude;  
+                            // Get the weather format in JSON 
+                            Parse.Cloud.httpRequest( {
+                                url: weatherURL, 
+                                success: function(weatherJSON) {
+                                    var weatherJson = JSON.parse(weatherJSON.text);
+                                    var weatherMessage = "Today, the weather is " 
+                                        + weatherJson["currently"]["summary"]
+                                        + ".%2C%2C%2C The chance of it raining is " + weatherJson["currently"]["precipProbability"] + " percent." ;
+                                    weatherMessage = weatherMessage.split(" ").join("%20"); 
+                                    var recapMessageURL = finalMessage + weatherMessage + "&return_url=1";
 
-                                    // Get the weather format in JSON 
-                                    Parse.Cloud.httpRequest( {
-                                        url: weatherURL, 
-                                        success: function(weatherJSON) {
-                                            var weatherJson = JSON.parse(weatherJSON.text);
-                                            var weatherMessage = "Today, the weather is " 
-                                                + weatherJson["currently"]["summary"]
-                                                + ".%2C%2C%2C The chance of it raining is " + weatherJson["currently"]["precipProbability"] + " percent." ;
-                                            weatherMessage = weatherMessage.split(" ").join("%20"); 
-                                            var weatherMessageURL = baseSpeechURL + speechPadding + weatherMessage + "&return_url=1";
-                                            console.log(weatherMessageURL);
-                                            Parse.Cloud.httpRequest({
-                                                url: weatherMessageURL,
-                                                success: function(weatherMessageMP3) {
+                                    console.log("recapMessageURL: " + recapMessageURL);
 
-                                                // Push to HKRules 
-                                                Parse.Push.send({
-                                                    where: pushQuery,
-                                                    data: {
-                                                        "alert": "Checking for house TTS",
-                                                        "content-available": 1,
-                                                        "leaveFlag": 1, 
-                                                        "initialCheckURL":  initialCheckMP3.text,
-                                                        "checkedSecurityURL": checkedSecurityMP3.text,
-                                                        "weatherMessageURL": weatherMessageMP3.text
-                                                    },
-                                                    push_time: alertTime
+                                    Parse.Cloud.httpRequest({
+                                        url: recapMessageURL,
+                                        success: function(recapMessageMP3) {
+
+                                            // Push to HKRules 
+                                            Parse.Push.send({
+                                                where: pushQuery,
+                                                data: {
+                                                    "alert": "Checking for house TTS",
+                                                    "content-available": 1,
+                                                    "leaveFlag": 1, 
+                                                    "initialCheckURL":  initialCheckMP3.text,
+                                                    "recapMessageURL": recapMessageMP3.text
                                                 },
-                                                    { success: function() {
-                                                        response.success("push for " + request.params.username + " scheduled.");
-                                                    }, error: function(error) {
-                                                        response.error("push errored");         
-                                                    }
-                                                }); //end push
-
-                                                },
-                                                error: function() {
-                                                    response.error("GET request failed for weatherMessageMP3");
+                                                push_time: alertTime
+                                            },
+                                                { success: function() {
+                                                    response.success("push for " + request.params.username + " scheduled.");
+                                                }, error: function(error) {
+                                                    response.error("push errored");         
                                                 }
-                                            });
-                                        }, 
-                                        error: function () {
-                                            response.error("GET request failed for weatherURL");
+                                            }); 
+
+                                        },
+                                        error: function() {
+                                            response.error("GET request failed for weatherMessageMP3");
                                         }
                                     });
-                                    
-                                },
-                                error: function() {
-                                    response.error("GET request failed for checkedSecurityRequest")
+                                }, 
+                                error: function () {
+                                    response.error("GET request failed for weatherURL");
                                 }
                             });
                             
