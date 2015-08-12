@@ -119,18 +119,22 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                     var endPointURL = json[0]["url"];
                     var apiCallURL = "https://graph.api.smartthings.com" + endPointURL;
 
+                    var checkSensorsURL = apiCallURL + "/contactSensors?access_token="+user.get("sttoken");
                     // Get list of contact sensors (doors, windows, etc...)
                     // Request for the sensors API call 
                     Parse.Cloud.httpRequest({
-                        url: apiCallURL,
-                        params: "/contactSensors"
-                        followRedirects: true,
+                        url: checkSensorsURL,
                         success: function(sensors) {
-                            // response.success(sensors.text);
-                            var sensorsJSON = JSON.parse(sensors.text);
+                            // Break up the list of sensors into JSON strings (based on [...])
+                            var matches = [];
+                            var pattern = /\[(.*?)\]/g;
+                            var match;
+                            while ((match = pattern.exec(sensors.text)) != null) {
+                                matches.push(match[1]);
+                            }
                             // Loops through all sensors
-                            for (i = 0; i < sensorsJSON.length; i++) {
-                                var currentSensor = sensorsJSON[i];
+                            for (i = 0; i < matches.length; i++) {
+                                var currentSensor = JSON.parse(matches[i]);
                                 if (currentSensor["value"] != "closed") {
                                     // You have an open sensor 
                                     console.log("You have an open sensor!");
