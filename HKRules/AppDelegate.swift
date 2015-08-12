@@ -122,10 +122,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
             dispatch_async(dispatch_get_global_queue(priority, 0)) {
-                // do some task
-                HKWControlHandler.sharedInstance().playStreamingMedia(finalCheckURL as! String, withCallback: { bool in
-                    println("Playing checkSecurity TTS...")
-                } )
+                var securityTimer = NSTimer(timeInterval: 7, target: self, selector: "playFinalSecurity:", userInfo: finalCheckURL, repeats: false)
                 dispatch_async(dispatch_get_main_queue()) {
                     // update some UI
                 }
