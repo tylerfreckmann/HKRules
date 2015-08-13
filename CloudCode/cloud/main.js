@@ -120,8 +120,8 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
         // Get list of contact sensors (doors, windows, etc...)
         return Parse.Cloud.httpRequest({url: checkSensorsURL});
     }).then(function(sensors) {
-        // parse the list of sensors, and check if any are open
         parseListOfSensors(sensors, request);
+        // Gets the current weather forecast
         return getWeatherMsg(request.params.locationLatitude, request.params.locationLongitude);
     }).then(function(weatherMessage) {
         var recapMessageURL = finalMsgForLeaveHouse + weatherMessage + "&return_url=1";
