@@ -2,7 +2,8 @@ require('cloud/app.js')
 
 var weatherAPIKey = "2746bc27d6d47ddd627f76d17870dab3";
 var baseSpeechURL = "http://tts-api.com/tts.mp3?q=";
-var speechPadding = ",,,,,".split(",").join("%2C");
+var speechPadding = ",,,".split(",").join("%2C");
+var longerPadding = ",,,,,".split(",").join("%2C");
 
 // Sets the alarm in the cloud, and notifies user of the result through push notifcation. 
 Parse.Cloud.define("setCloudAlarm", function(request, response) {
@@ -101,11 +102,11 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
     pushQuery.equalTo("user", user);
     pushQuery.equalTo("appName", "HKRules");
      
+    var finalMessage = "";
+
     // Get TTS URL for  initial check message  
     var message = "%2C let me check if the house is safe right now. Give me a second or two.".split(" ").join("%20");
-    var initialCheckURL =  baseSpeechURL + speechPadding + "Hi%20" + request.params.username + message + "&return_url=1";          
-
-    var finalMessage = "";
+    var initialCheckURL =  baseSpeechURL + longerPadding + "Hi%20" + request.params.username + message + "&return_url=1";          
 
     // Requests for the initial check TTS 
     Parse.Cloud.httpRequest({
@@ -153,7 +154,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                     + speechPadding
                                     + "Hi%20" 
                                     + request.params.username 
-                                    + "%2C All of your sensors are closed. Your home is safe and secured.".split(" ").join("%20")
+                                    + "%2C All of your sensors are closed. Your home is safe and secured. ".split(" ").join("%20")
                             }
                             else {
                                 finalMessage =  
@@ -179,9 +180,11 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                 url: weatherURL, 
                                 success: function(weatherJSON) {
                                     var weatherJson = JSON.parse(weatherJSON.text);
-                                    var weatherMessage = "Today, the weather is " 
-                                        + weatherJson["currently"]["summary"]
-                                        + ".%2C%2C%2C The chance of it raining is " + weatherJson["currently"]["precipProbability"] + " percent." ;
+                                    var weatherMessage = 
+                                        speechPadding + "Today, the weather is " + weatherJson["currently"]["summary"]
+                                        + speechPadding + "The current temperature is " + Math.floor(weatherJson["currently"]["temperature"]) + "degrees"
+                                        + speechPadding + "The chance of it raining is " + weatherJson["currently"]["precipProbability"] + " percent"
+                                        + speechPadding + "Have a good rest of the day!" ;
                                     weatherMessage = weatherMessage.split(" ").join("%20"); 
                                     var recapMessageURL = finalMessage + weatherMessage + "&return_url=1";
 
@@ -238,9 +241,3 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
         }
     });
 });
-
-// var method = function(url, erilc, tyler) {
-
-// }
-
-// method(funurl, f)
