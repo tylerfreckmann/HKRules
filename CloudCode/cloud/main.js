@@ -12,7 +12,7 @@ var finalMsgForLeaveHouse = "";
 var initialGreetingURL = "";
 
 
-// Sets the alarm in the cloud, and notifies user of the result through push notifcation. 
+/* Sets the alarm in the cloud, and notifies user of the result through push notifcation. */
 Parse.Cloud.define("setCloudAlarm", function(request, response) {
     var alarmDate = new Date(request.params.alarmTime);
     var user = Parse.User.current();
@@ -47,7 +47,7 @@ Parse.Cloud.define("setCloudAlarm", function(request, response) {
     });
 });
 
-// Called to push notification to HKRules application after shower timer triggered.
+/* Called to push notification to HKRules application after shower timer triggered. */
 Parse.Cloud.define("showerAlert", function(request, response) {
 
     var user = Parse.User.current();
@@ -92,7 +92,7 @@ Parse.Cloud.define("showerAlert", function(request, response) {
     });        
 });
 
-// Called when client is about to leave the house 
+/* Called when client is about to leave the house, checking home security and weather forecast */ 
 Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
     var user = Parse.User.current();
     var alertTime = getCurrentTime();
@@ -107,7 +107,6 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
 
     // Requests for the initial check TTS 
     Parse.Cloud.httpRequest({url: initialCheckURL}).then(function(initialCheckMP3) {
-        // Check home security
         var requestEndPointURL = "https://graph.api.smartthings.com/api/smartapps/endpoints?access_token="
             + user.get("sttoken");
         initialGreetingURL = initialCheckMP3.text;
@@ -148,6 +147,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
     });
 });
 
+/* Helper function for getting the current time */
 var getCurrentTime = function() {
     var alertTime = new Date();
     alertTime.getHours();
@@ -156,6 +156,7 @@ var getCurrentTime = function() {
     return alertTime;
 }
 
+/* Helper function for going through the list of sensors, checking if any are open and creating TTS for them. */
 var parseListOfSensors = function(sensors, request) {
     // Break up the list of sensors into JSON strings (based on [...])
     var matches = [];
@@ -195,6 +196,7 @@ var parseListOfSensors = function(sensors, request) {
     }
 }
 
+/* Recieves the weather forecast given a coordinate. Returns a promise of a weather forecast. */
 var getWeatherMsg = function(latitude, longitude) {
     var promise = new Parse.Promise()
     // Start fetching weather forecast
@@ -223,6 +225,7 @@ var getWeatherMsg = function(latitude, longitude) {
     return promise;
 }
 
+/* Parse Cloud method for getting the weather forecast in String */ 
 Parse.Cloud.define("getWeather", function (request, response) {
     getWeatherMsg(request.params.latitude, request.params.longitude).then(function(weatherMessage) {
         response.success(weatherMessage);
