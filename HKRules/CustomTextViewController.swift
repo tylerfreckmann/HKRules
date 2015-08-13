@@ -25,6 +25,15 @@ class CustomTextViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        if AlarmPlayingSingleton.sharedInstance.getAlarmPlaying() {
+            let stopViewController = StopAlarmViewController()
+            self.presentViewController(stopViewController, animated: true, completion: { () -> Void in
+                
+            })
+        }
+    }
 
     @IBAction func save(sender: UIButton) {
         wakeConfig["greeting"] = greetingField.text

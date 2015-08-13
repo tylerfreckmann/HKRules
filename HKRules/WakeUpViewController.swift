@@ -20,9 +20,6 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        // Register for notification about alarm firing
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleAlarmFired", name: "AlarmFiredNotification", object: nil)
-        
         // Initialize User
         user = PFUser.currentUser()!
         
@@ -64,6 +61,16 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        if AlarmPlayingSingleton.sharedInstance.getAlarmPlaying() {
+            println("trying to show stop alarm view controller")
+            let stopViewController = StopAlarmViewController()
+            self.presentViewController(stopViewController, animated: true, completion: { () -> Void in
+                
+            })
+        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -177,10 +184,6 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let test = response as? String
             println(test)
         }
-    }
-    
-    func handleAlarmFired() {
-        self.performSegueWithIdentifier("stopAlarm", sender: nil)
     }
     
     /*

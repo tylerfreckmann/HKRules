@@ -68,6 +68,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="j4k-sB-FUS"/>
+                    <connections>
+                        <segue destination="PUt-c6-AeY" kind="show" identifier="stopAlarm" id="zWJ-UR-6qI"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mqq-aK-eKA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -173,7 +176,6 @@
                         <segue destination="Ooe-UY-pA7" kind="show" identifier="chooseAlarmSound" id="wHS-Rx-8rd"/>
                         <segue destination="MvL-Fg-7rQ" kind="show" identifier="customText" id="92r-U7-yPs"/>
                         <segue destination="EQn-qb-ize" kind="show" identifier="smartThings" id="EI0-hS-NaW"/>
-                        <segue destination="PUt-c6-AeY" kind="show" identifier="stopAlarm" id="Uh3-9J-Crs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6x9-rY-8gG" userLabel="First Responder" sceneMemberID="firstResponder"/>

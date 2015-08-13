@@ -99,9 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                     println("Played alarm song? \(HKWControlHandler.sharedInstance().playCAF(assetURL, songName: item.title, resumeFlag: false))")
                 }
                 
-                // Notify app that alarm went off
-                let notification = NSNotification(name: "AlarmFiredNotification", object: self)
-                NSNotificationCenter.defaultCenter().postNotification(notification)
+                AlarmPlayingSingleton.sharedInstance.setAlarmPlaying(true)
             }
             
             if let alertURL: AnyObject = userInfo["ttsURL"] {
@@ -148,9 +146,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
     }
     
     func hkwPlayEnded() {
-        println("playing next song")
+        println("playing next song, track count: \(tracksQueue.count)")
         if tracksQueue.count != 0 {
             playFromQueue()
+        } else {
+            alreadyReacted = false
+            AlarmPlayingSingleton.sharedInstance.setAlarmPlaying(false)
         }
     }
 
@@ -170,6 +171,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        if AlarmPlayingSingleton.sharedInstance.getAlarmPlaying() {
+            println("trying to show stop alarm view controller")
+            let stopViewController = StopAlarmViewController()
+            self.window?.rootViewController = stopViewController
+        }
     }
 
     func applicationWillTerminate(application: UIApplication) {
