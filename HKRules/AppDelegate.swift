@@ -105,7 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                 }
             }
             
-            if let alertURL: AnyObject = userInfo["ttsURL"] {
+            if let alertURL: AnyObject = userInfo["showerAlertURL"] {
                 // Play TTS shower alert through playStreamng
                 HKWControlHandler.sharedInstance().playStreamingMedia(alertURL as! String, withCallback: { bool in
                     println(alertURL)
@@ -123,7 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                 
                 let finalCheckURL = userInfo["recapMessageURL"]! as! String
                 tracksQueue.append(finalCheckURL)
-                println("Added checkSecurity TTS to queue")
+                println("Added finalSpeech TTS to queue")
                 
 //                let weatherMessageURL = userInfo["weatherMessageURL"]! as! String
 //                tracksQueue.append(weatherMessageURL)

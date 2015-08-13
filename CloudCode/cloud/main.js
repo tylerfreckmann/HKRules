@@ -41,7 +41,7 @@ Parse.Cloud.define("setCloudAlarm", function(request, response) {
 });
 
 // Called to push notification to HKRules application after shower timer triggered.
-Parse.Cloud.define("showerStarted", function(request, response) {
+Parse.Cloud.define("showerAlert", function(request, response) {
 
 	var user = Parse.User.current();
                
@@ -64,14 +64,14 @@ Parse.Cloud.define("showerStarted", function(request, response) {
     
     Parse.Cloud.httpRequest({
         url: ttsURL,
-        success: function(httpResponse) {
+        success: function(showerAlertResponse) {
             // Push to HKRules phone
             Parse.Push.send({
                 where: pushQuery,
                 data: {
-                    "alert": "You showered for " + request.params.showerTime.replace("+", " ") + "!",
+                    "alert": "You showered for " + request.params.showerTime.replace("+", " ").replace(".", "") + "!",
                     "content-available": 1,
-                    "ttsURL":  httpResponse.text
+                    "showerAlertURL":  showerAlertResponse.text
                 },
                     push_time: alertTime
             },{ success: function() {
@@ -82,8 +82,8 @@ Parse.Cloud.define("showerStarted", function(request, response) {
             }
             }); //end push
         },
-        error: function(httpResponse) {
-            response.error(httpResponse)
+        error: function() {
+            response.error("GET request failed for showerAlertResponse");
         }
     });        
 });
@@ -188,8 +188,6 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                                     weatherMessage = weatherMessage.split(" ").join("%20"); 
                                     var recapMessageURL = finalMessage + weatherMessage + "&return_url=1";
 
-                                    console.log("recapMessageURL: " + recapMessageURL);
-
                                     Parse.Cloud.httpRequest({
                                         url: recapMessageURL,
                                         success: function(recapMessageMP3) {
@@ -215,7 +213,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
 
                                         },
                                         error: function() {
-                                            response.error("GET request failed for weatherMessageMP3");
+                                            response.error("GET request failed for recapMessageURL");
                                         }
                                     });
                                 }, 
@@ -226,7 +224,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
                             
                         },
                         error: function() {
-                            response.error("GET request failed for contactSensorsRequest")
+                            response.error("GET request failed for checkSensorsURL")
                         }
                     });
                         

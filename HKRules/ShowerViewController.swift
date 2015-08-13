@@ -13,6 +13,7 @@ class ShowerViewController: UIViewController {
 
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var savedBtn: UIButton!
+    @IBOutlet weak var periodicAlertSwitch: UISwitch!
     
     var user: PFUser!
     var currentShower: PFObject!
@@ -22,9 +23,6 @@ class ShowerViewController: UIViewController {
         
         // Set date picker to only pick time 
         datePicker.datePickerMode = UIDatePickerMode.CountDownTimer
-        
-        // Set initial time countdown to 5 minutes. (stock value) 
-        datePicker.countDownDuration = 300
         
         // Initialize User
         user = PFUser.currentUser()!
@@ -46,8 +44,15 @@ class ShowerViewController: UIViewController {
                     println("IN shower FUNCTION viewDidLoad - showerConfig.save" + error!.localizedDescription)
                 }
             })
+            
+            // Set initial time countdown to 5 minutes. (stock value)
+            datePicker.countDownDuration = 300
         } else {
             currentShower = optionalShowerConfig as! PFObject
+            
+            // Set initial time countdown user's current shower time
+            datePicker.countDownDuration = currentShower["timeTillAlert"] as! NSTimeInterval
+            periodicAlertSwitch.on = currentShower["periodicAlert"] as! Bool
         }
     }
 
@@ -55,7 +60,7 @@ class ShowerViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-
+    /* Takes the time from the date picker and sets it in the parse cloud for the user */
     @IBAction func savedPressed(sender: UIButton) {
         var dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "HH:mm"
@@ -66,8 +71,12 @@ class ShowerViewController: UIViewController {
         var totalSecs = convertToSecs(hours.toInt()!, minutes: minutes.toInt()!)
         println("Total seconds: \(totalSecs)")
         
-        // save shower time to the parse cloud 
+        // Save shower time to the parse cloud
         currentShower["timeTillAlert"] = totalSecs
+        
+        // Save whether or not they want periodic alerts 
+        currentShower["periodicAlert"] = periodicAlertSwitch.on
+        
         currentShower.saveInBackgroundWithBlock({ (success, error) -> Void in
             if success {
                 self.user["showerConfig"] = self.currentShower
@@ -83,6 +92,7 @@ class ShowerViewController: UIViewController {
         
     }
 
+    /* Helper method for converting hours and minutes from datepicker to purely seconds */
     func convertToSecs(hours: Int, minutes: Int) -> Int {
         var hoursToSec = hours * 3600
         var minutesToSec = minutes * 60
