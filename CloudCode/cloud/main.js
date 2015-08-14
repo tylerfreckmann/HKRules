@@ -206,12 +206,19 @@ var getWeatherMsg = function(latitude, longitude) {
         url: weatherURL, 
         success: function(weatherJSON) {
             var weatherJson = JSON.parse(weatherJSON.text);
-            var temp =  
+            var weatherMessage =  
                 speechPadding + "Today, the weather is " + weatherJson["currently"]["summary"]
-                + speechPadding + "The current temperature is " + Math.floor(weatherJson["currently"]["temperature"]) + "degrees"
-                + speechPadding + "The chance of it raining is " + Math.floor((weatherJson["currently"]["precipProbability"]*100)) + " percent"
-                + speechPadding + "Have a good rest of the day!" ;
-            var weatherMessage = temp.split(" ").join("%20"); 
+                + speechPadding + "The current temperature is " + Math.floor(weatherJson["currently"]["temperature"]) + "degrees. ";
+            var chanceRain = weatherJson["currently"]["precipProbability"]*100;
+            if (chanceRain > 0) {
+                // There is a chance of it raining 
+                weatherMessage = weatherMessage + speechPadding + "There is a " + chanceRain + " percent chance of it raining today. You should take an umbrella with you! "
+            }
+            else { 
+                weatherMessage = weatherMessage +  "The chance of it raining today is 0 percent. "
+            }
+            weatherMessage = weatherMessage + speechPadding + "Have a good rest of the day!" ;
+            weatherMessage = weatherMessage.split(" ").join("%20"); 
             promise.resolve(weatherMessage);
         }, 
         error: function () {
