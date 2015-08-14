@@ -24,6 +24,11 @@ class ShowerViewController: UIViewController {
         // Set date picker to only pick time 
         datePicker.datePickerMode = UIDatePickerMode.CountDownTimer
         
+        // Add constraints to countdown timer. (Whose going to take a shower longer than 1 hour?...)
+        var twoHour = convertToSecs(2, minutes: 0)
+        var maxTime = NSDate(timeIntervalSinceNow: NSTimeInterval(twoHour))
+        datePicker.maximumDate = maxTime
+        
         // Initialize User
         user = PFUser.currentUser()!
         

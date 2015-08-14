@@ -121,10 +121,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                 let finalCheckURL = userInfo["recapMessageURL"]! as! String
                 tracksQueue.append(finalCheckURL)
                 println("Added finalSpeech TTS to queue")
-                
-//                let weatherMessageURL = userInfo["weatherMessageURL"]! as! String
-//                tracksQueue.append(weatherMessageURL)
-//                println("Added weatherMessafe TTS to queue")
             }
             
         }
