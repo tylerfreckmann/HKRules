@@ -1,13 +1,12 @@
 require('cloud/app.js')
 
+// Global variables used for speech URLS 
 var weatherAPIKey = "2746bc27d6d47ddd627f76d17870dab3";
 var baseSpeechURL = "http://tts-api.com/tts.mp3?q=";
 var speechPadding = ",,,".split(",").join("%2C");
 var longerPadding = ",,,,,".split(",").join("%2C");
 
 // Used in "prepareToLeaveHouse"
-var anyOpenSensors = false; 
-var listOpenSensors = [];
 var finalMsgForLeaveHouse = "";
 var initialGreetingURL = "";
 
@@ -63,8 +62,10 @@ Parse.Cloud.define("showerAlert", function(request, response) {
     var showerAlertURL = baseSpeechURL 
         + speechPadding
         + "Alert%2C You have showered for ".split(" ").join("%20") 
-        + request.params.showerTime 
+        + request.params.showerTime.split(" ").join("%20") 
         + "&return_url=1";
+
+    console.log(showerAlertURL);
 
     Parse.Cloud.httpRequest({
         url: showerAlertURL,
@@ -132,7 +133,7 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
         return Parse.Push.send({
                     where: pushQuery,
                     data: {
-                        "alert": "Checking for house TTS",
+                        "alert": "Checking security of your home & getting your weather forecast!",
                         "content-available": 1,
                         "leaveFlag": 1, 
                         "initialCheckURL":  initialGreetingURL,
@@ -166,6 +167,8 @@ var parseListOfSensors = function(sensors, request) {
         matches.push(match[1]);
     }
 
+    var listOpenSensors = [];
+    var anyOpenSensors = false; 
     // Loops through all sensors, and keeps track of them. 
     for (i = 0; i < matches.length; i++) {
         var currentSensor = JSON.parse(matches[i]);
@@ -213,7 +216,7 @@ var getWeatherMsg = function(latitude, longitude) {
             var temp =  
                 speechPadding + "Today, the weather is " + weatherJson["currently"]["summary"]
                 + speechPadding + "The current temperature is " + Math.floor(weatherJson["currently"]["temperature"]) + "degrees"
-                + speechPadding + "The chance of it raining is " + weatherJson["currently"]["precipProbability"] + " percent"
+                + speechPadding + "The chance of it raining is " + Math.floor((weatherJson["currently"]["precipProbability"]*100)) + " percent"
                 + speechPadding + "Have a good rest of the day!" ;
             var weatherMessage = temp.split(" ").join("%20"); 
             promise.resolve(weatherMessage);
