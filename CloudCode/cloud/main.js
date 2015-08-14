@@ -239,19 +239,14 @@ Parse.Cloud.define("getWeather", function (request, response) {
 Parse.Cloud.afterSave("WakeConfig", function(request) {
     var greeting = request.object.get("greeting");
     if (greeting.search("http") != 0) {
-        greeting.split(" ").join("%20");
-        var ttsURL = baseSpeechURL+greeting+"&return_url=1";
+        greeting = greeting.split(" ").join("%20");
+        var ttsURL = baseSpeechURL+speechPadding+greeting+"&return_url=1";
         Parse.Cloud.httpRequest({ url: ttsURL}).then(function(httpResponse) {
-            request.object.save({ 
-                greeting: httpResponse.text
-            }, {
-                success: function(wakeConfig) {
-                    console.log("successfully transformed greeting");
-                },
-                error: function(wakeConfig, error) {
-                    console.log("greeting transformation failed: " + wakeConfig +" "+ error);
-                }
-            });
+            return request.object.save({greetingURL: httpResponse.text});
+        }).then(function(wakeConfig) {
+            console.log("successfully transformed greeting");
+        }, function(error) {
+            console.log("greeting transformation failed: " + error);
         });
     }
 });

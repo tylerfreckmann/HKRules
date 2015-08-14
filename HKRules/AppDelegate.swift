@@ -99,7 +99,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
                     println("Played alarm song? \(HKWControlHandler.sharedInstance().playCAF(assetURL, songName: item.title, resumeFlag: false))")
                 }
                 
-                AlarmPlayingSingleton.sharedInstance.setAlarmPlaying(true)
+                //AlarmPlayingSingleton.sharedInstance.setAlarmPlaying(true)
+                println("trying to show stop alarm view controller")
+                var storyBoard = UIStoryboard(name: "Main", bundle: nil)
+                var stopViewController = storyBoard.instantiateViewControllerWithIdentifier("StopAlarm") as! StopAlarmViewController
+                var topController = self.window?.rootViewController
+                while (topController?.presentedViewController != nil) {
+                    topController = topController?.presentedViewController
+                }
+                topController?.presentViewController(stopViewController, animated: true, completion: { () -> Void in
+                    println("it worked!")
+                })
             }
             
             if let alertURL: AnyObject = userInfo["showerAlertURL"] {
@@ -151,7 +161,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
             playFromQueue()
         } else {
             alreadyReacted = false
-            AlarmPlayingSingleton.sharedInstance.setAlarmPlaying(false)
+            //AlarmPlayingSingleton.sharedInstance.setAlarmPlaying(false)
         }
     }
 
@@ -171,18 +181,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        if AlarmPlayingSingleton.sharedInstance.getAlarmPlaying() {
-            println("trying to show stop alarm view controller")
-            var storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            var stopViewController = storyBoard.instantiateViewControllerWithIdentifier("StopAlarm") as! StopAlarmViewController
-            var topController = self.window?.rootViewController
-            while (topController?.presentedViewController != nil) {
-                topController = topController?.presentedViewController
-            }
-            topController?.presentViewController(stopViewController, animated: true, completion: { () -> Void in
-                println("it worked!")
-            })
-        }
+//        if AlarmPlayingSingleton.sharedInstance.getAlarmPlaying() {
+//            println("trying to show stop alarm view controller")
+//            var storyBoard = UIStoryboard(name: "Main", bundle: nil)
+//            var stopViewController = storyBoard.instantiateViewControllerWithIdentifier("StopAlarm") as! StopAlarmViewController
+//            var topController = self.window?.rootViewController
+//            while (topController?.presentedViewController != nil) {
+//                topController = topController?.presentedViewController
+//            }
+//            topController?.presentViewController(stopViewController, animated: true, completion: { () -> Void in
+//                println("it worked!")
+//            })
+//        }
     }
 
     func applicationWillTerminate(application: UIApplication) {

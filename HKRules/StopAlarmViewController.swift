@@ -12,7 +12,7 @@ import Parse
 class StopAlarmViewController: UIViewController {
     
     var wakeConfig: PFObject!
-    var greeting: String!
+    var greetingURL: String!
     var weather: Bool!
     var lights: Bool!
     var tracksQueue: [String]!
@@ -28,6 +28,7 @@ class StopAlarmViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        println("called viewDidLoad")
         tracksQueue = [String]()
         var user = PFUser.currentUser()!
         var optionalWakeConfig: AnyObject? = user["wakeConfig"]
@@ -42,30 +43,27 @@ class StopAlarmViewController: UIViewController {
     }
     
     func populateData() {
-        greeting = wakeConfig["greeting"] as! String
+        println("called populateData")
+        greetingURL = wakeConfig["greetingURL"] as! String
         weather = wakeConfig["weather"] as! Bool
         lights = wakeConfig["lights"] as! Bool
+        tracksQueue.append(greetingURL)
+        if weather==true {
+            PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
+                if error == nil {
+                    PFCloud.callFunctionInBackground("getWeather", withParameters: ["latitude": geoPoint!.latitude, "longitude": geoPoint!.longitude], block: { (response, error) -> Void in
+                        println("response: \(response) error: \(error)")
+                    })
+                } else {
+                    println("error getting location")
+                }
+            })
+        }
     }
     
 
     @IBAction func stopPressed(sender: UIButton) {
         HKWControlHandler.sharedInstance().stop()
-        println("greeting: \(greeting)")
-        if greeting.hasPrefix("http") {
-            println("got greeting")
-            tracksQueue.append(greeting)
-            playFromQueue()
-        }
-        println("weather: \(weather)")
-        if weather.boolValue {
-            PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
-                if error == nil {
-                    PFCloud.callFunctionInBackground("getWeather", withParameters: ["latitude": geoPoint!.latitude, "longitude": geoPoint!.longitude], block: { (response, error) -> Void in
-                        println("response: \(response)")
-                    })
-                }
-            })
-        }
     }
     
     func playFromQueue() {
