@@ -231,7 +231,7 @@ Parse.Cloud.define("getWeather", function (request, response) {
 /* After save method for transforming wake config greeting text into tts url*/
 Parse.Cloud.afterSave("WakeConfig", function(request) {
     var greeting = request.object.get("greeting");
-    if (greeting.search("http") == 0) {
+    if (greeting.search("http") != 0) {
         greeting.split(" ").join("%20");
         var ttsURL = baseSpeechURL+greeting+"&return_url=1";
         Parse.Cloud.httpRequest({ url: ttsURL}).then(function(httpResponse) {
