@@ -17,14 +17,7 @@ Parse.Cloud.define("setCloudAlarm", function(request, response) {
     var alarmDate = new Date(request.params.alarmTime);
     var user = Parse.User.current();
     var wakeConfig = user.get("wakeConfig");
-    var greetingURL;
     wakeConfig.fetch().then(function(wakeConfig) {
-        // Get greeting
-        var greeting = wakeConfig.get("greeting").split(" ").join("%20");
-        var ttsURL = baseSpeechURL+greeting+"&return_url=1";
-        return Parse.Cloud.httpRequest({ url: ttsURL});
-    }).then(function(httpResponse) {
-        greetingURL = httpResponse.text;
         var pushQuery = new Parse.Query(Parse.Installation);
         pushQuery.equalTo("user", user);
         return Parse.Push.send({
@@ -34,7 +27,7 @@ Parse.Cloud.define("setCloudAlarm", function(request, response) {
                 "content-available": 1,
                 "soundAlarm": 1,
                 "soundFile": wakeConfig.get("sound"),
-                "greeting": greetingURL,
+                "greeting": wakeConfig.get("greeting"),
                 "weather": wakeConfig.get("weather"),
                 "lights": wakeConfig.get("lights")
             },
@@ -230,4 +223,20 @@ Parse.Cloud.define("getWeather", function (request, response) {
     getWeatherMsg(request.params.latitude, request.params.longitude).then(function(weatherMessage) {
         response.success(weatherMessage);
     });
+});
+
+/* After save method for transforming wake config greeting text into tts url*/
+Parse.Cloud.afterSave("WakeConfig", function(request) {
+    var greeting = request.object.get("greeting");
+    if (greeting.search("http") == 0) {
+        greeting.split(" ").join("%20");
+        var ttsURL = baseSpeechURL+greeting+"&return_url=1";
+        Parse.Cloud.httpRequest({ url: ttsURL}).then(function(httpResponse) {
+            return request.object.save({ greeting: httpResponse.text});
+        }).then(function(wakeConfig) {
+            console.log("successfully transformed greeting");
+        }, function(wakeConfig, error) {
+            console.log("greeting transformation failed: " + error.message);
+        });
+    }
 });
