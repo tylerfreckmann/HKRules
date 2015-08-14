@@ -238,7 +238,7 @@ Parse.Cloud.afterSave("WakeConfig", function(request) {
             return request.object.save({ greeting: httpResponse.text});
         }).then(function(wakeConfig) {
             console.log("successfully transformed greeting");
-        }, function(wakeConfig, error) {
+        }, function(error) {
             console.log("greeting transformation failed: " + error.message);
         });
     }
