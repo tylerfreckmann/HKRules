@@ -173,8 +173,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         if AlarmPlayingSingleton.sharedInstance.getAlarmPlaying() {
             println("trying to show stop alarm view controller")
-            let stopViewController = StopAlarmViewController()
-            self.window?.rootViewController = stopViewController
+            var storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            var stopViewController = storyBoard.instantiateViewControllerWithIdentifier("StopAlarm") as! StopAlarmViewController
+            var topController = self.window?.rootViewController
+            while (topController?.presentedViewController != nil) {
+                topController = topController?.presentedViewController
+            }
+            topController?.presentViewController(stopViewController, animated: true, completion: { () -> Void in
+                println("it worked!")
+            })
         }
     }
 

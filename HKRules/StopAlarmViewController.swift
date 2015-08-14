@@ -7,27 +7,32 @@
 //
 
 import UIKit
+import Parse
 
 class StopAlarmViewController: UIViewController {
+    
+    var wakeConfig: PFObject!
+    var greeting: String!
+    var weather: Bool!
+    var lights: Bool!
+    var tracksQueue: [String]!
+    
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
 
-    var alarm: [NSObject : AnyObject]?
-    
-    convenience init() {
-        self.init(alarm: nil)
-    }
-    
-    init(alarm: [NSObject : AnyObject]?) {
-        self.alarm = alarm
-        super.init(nibName: nil, bundle: nil)
-    }
-    
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tracksQueue = [String]()
+        var user = PFUser.currentUser()!
+        var optionalWakeConfig: AnyObject? = user["wakeConfig"]
+        wakeConfig = optionalWakeConfig as! PFObject
+        wakeConfig.fetchInBackgroundWithTarget(self, selector: "populateData")
         // Do any additional setup after loading the view.
     }
 
@@ -36,7 +41,53 @@ class StopAlarmViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func populateData() {
+        greeting = wakeConfig["greeting"] as! String
+        weather = wakeConfig["weather"] as! Bool
+        lights = wakeConfig["lights"] as! Bool
+    }
+    
 
+    @IBAction func stopPressed(sender: UIButton) {
+        HKWControlHandler.sharedInstance().stop()
+        println("greeting: \(greeting)")
+        if greeting.hasPrefix("http") {
+            println("got greeting")
+            tracksQueue.append(greeting)
+            playFromQueue()
+        }
+        println("weather: \(weather)")
+        if weather.boolValue {
+            PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
+                if error == nil {
+                    PFCloud.callFunctionInBackground("getWeather", withParameters: ["latitude": geoPoint!.latitude, "longitude": geoPoint!.longitude], block: { (response, error) -> Void in
+                        println("response: \(response)")
+                    })
+                }
+            })
+        }
+    }
+    
+    func playFromQueue() {
+        if !HKWControlHandler.sharedInstance().isPlaying() {
+            let track = tracksQueue.removeAtIndex(0)
+            if track.hasPrefix("http") {
+                HKWControlHandler.sharedInstance().playStreamingMedia(track, withCallback: { (success) -> Void in
+                    println("PLAY FROM QUEUE \(track)? \(success)")
+                })
+            } else {
+                HKWControlHandler.sharedInstance().playCAF(NSURL(fileURLWithPath: track), songName: "", resumeFlag: false)
+            }
+        }
+    }
+    
+    func hkwPlayEnded() {
+        println("playing next song, track count: \(tracksQueue.count)")
+        if tracksQueue.count != 0 {
+            playFromQueue()
+        }
+    }
+    
     /*
     // MARK: - Navigation
 

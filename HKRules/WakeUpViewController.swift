@@ -63,16 +63,6 @@ class WakeUpViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidAppear(animated: Bool) {
-        if AlarmPlayingSingleton.sharedInstance.getAlarmPlaying() {
-            println("trying to show stop alarm view controller")
-            let stopViewController = StopAlarmViewController()
-            self.presentViewController(stopViewController, animated: true, completion: { () -> Void in
-                
-            })
-        }
-    }
-    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
     }

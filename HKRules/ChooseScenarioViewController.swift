@@ -43,13 +43,6 @@ class ChooseScenarioViewController: UIViewController {
                 
             })
         }
-        
-        if AlarmPlayingSingleton.sharedInstance.getAlarmPlaying() {
-            let stopViewController = StopAlarmViewController()
-            self.presentViewController(stopViewController, animated: true, completion: { () -> Void in
-                
-            })
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,11 +53,6 @@ class ChooseScenarioViewController: UIViewController {
 
     @IBAction func logoutPressed(sender: UIButton) {
         PFUser.logOut()
-    }
-    
-    func handleAlarmFired() {
-        println("Handling alarm fired notification")
-        self.performSegueWithIdentifier("stopAlarm", sender: nil)
     }
     
     /*

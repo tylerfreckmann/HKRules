@@ -32,6 +32,7 @@
 		F8E4D0321B7942E400D4255B /* SmartThingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E4D0311B7942E400D4255B /* SmartThingsViewController.swift */; };
 		F8E61A9C1B7BF669009BDA0D /* StopAlarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E61A9B1B7BF669009BDA0D /* StopAlarmViewController.swift */; };
 		F8E61A9E1B7D0652009BDA0D /* AlarmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E61A9D1B7D0652009BDA0D /* AlarmManager.swift */; };
+		F8E61AA01B7D31AC009BDA0D /* stop-button-hi.png in Resources */ = {isa = PBXBuildFile; fileRef = F8E61A9F1B7D31AC009BDA0D /* stop-button-hi.png */; };
 		F8F5AA7E1B69B370002E84D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F5AA7D1B69B370002E84D8 /* AppDelegate.swift */; };
 		F8F5AA831B69B370002E84D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8F5AA811B69B370002E84D8 /* Main.storyboard */; };
 		F8F5AA851B69B370002E84D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8F5AA841B69B370002E84D8 /* Images.xcassets */; };
@@ -92,6 +93,7 @@
 		F8E4D0311B7942E400D4255B /* SmartThingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmartThingsViewController.swift; sourceTree = "<group>"; };
 		F8E61A9B1B7BF669009BDA0D /* StopAlarmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StopAlarmViewController.swift; sourceTree = "<group>"; };
 		F8E61A9D1B7D0652009BDA0D /* AlarmManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
+		F8E61A9F1B7D31AC009BDA0D /* stop-button-hi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop-button-hi.png"; sourceTree = "<group>"; };
 		F8F5AA781B69B370002E84D8 /* HKRules.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HKRules.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8F5AA7C1B69B370002E84D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8F5AA7D1B69B370002E84D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 				070D81461B7925B200FA622E /* Harman_Logo.png */,
 				F8E4D0151B6FF2EC00D4255B /* alarm.wav */,
 				F8F5AA7C1B69B370002E84D8 /* Info.plist */,
+				F8E61A9F1B7D31AC009BDA0D /* stop-button-hi.png */,
 				F8E61A9D1B7D0652009BDA0D /* AlarmManager.swift */,
 			);
 			name = "Supporting Files";
@@ -390,6 +393,7 @@
 				070D81471B7925B200FA622E /* Harman_Logo.png in Resources */,
 				F8E4D02E1B7529F300D4255B /* silence.wav in Resources */,
 				F8F5AA831B69B370002E84D8 /* Main.storyboard in Resources */,
+				F8E61AA01B7D31AC009BDA0D /* stop-button-hi.png in Resources */,
 				F8F5AA881B69B370002E84D8 /* LaunchScreen.xib in Resources */,
 				F8F5AA851B69B370002E84D8 /* Images.xcassets in Resources */,
 				F8E4D00C1B6FDE8F00D4255B /* License-iOS-Omni.pdf in Resources */,

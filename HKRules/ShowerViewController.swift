@@ -49,10 +49,19 @@ class ShowerViewController: UIViewController {
             datePicker.countDownDuration = 300
         } else {
             currentShower = optionalShowerConfig as! PFObject
-            
-            // Set initial time countdown user's current shower time
-            datePicker.countDownDuration = currentShower["timeTillAlert"] as! NSTimeInterval
-            periodicAlertSwitch.on = currentShower["periodicAlert"] as! Bool
+            currentShower.fetchInBackgroundWithBlock({ (currentShower, error) -> Void in
+                if error == nil {
+                    // Set initial time countdown user's current shower time
+                    var time = self.currentShower["timeTillAlert"] as! NSTimeInterval
+                    println("time: \(time)")
+                    self.datePicker.countDownDuration = self.currentShower["timeTillAlert"] as! NSTimeInterval
+                    var per = self.currentShower["periodicAlert"] as! Bool
+                    println("per: \(per)")
+                    self.periodicAlertSwitch.on = self.currentShower["periodicAlert"] as! Bool
+                } else {
+                    println("error: \(error)")
+                }
+            })
         }
     }
 
