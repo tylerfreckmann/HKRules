@@ -235,11 +235,16 @@ Parse.Cloud.afterSave("WakeConfig", function(request) {
         greeting.split(" ").join("%20");
         var ttsURL = baseSpeechURL+greeting+"&return_url=1";
         Parse.Cloud.httpRequest({ url: ttsURL}).then(function(httpResponse) {
-            return request.object.save({ greeting: httpResponse.text});
-        }).then(function(wakeConfig) {
-            console.log("successfully transformed greeting");
-        }, function(error) {
-            console.log("greeting transformation failed: " + error.message);
+            request.object.save({ 
+                greeting: httpResponse.text
+            }, {
+                success: function(wakeConfig) {
+                    console.log("successfully transformed greeting");
+                },
+                error: function(wakeConfig, error) {
+                    console.log("greeting transformation failed: " + wakeConfig +" "+ error);
+                }
+            });
         });
     }
 });
