@@ -13,7 +13,6 @@ import CoreLocation
 class StopAlarmViewController: UIViewController, CLLocationManagerDelegate{
     
     var wakeConfig: PFObject!
-    var greetingURL: String!
     var weather: Bool!
     var lights: Bool!
     var appDelegate: AppDelegate!
@@ -51,7 +50,6 @@ class StopAlarmViewController: UIViewController, CLLocationManagerDelegate{
     
     func populateData() {
         println("called populateData")
-        greetingURL = wakeConfig["greetingURL"] as! String
         weather = wakeConfig["weather"] as! Bool
         lights = wakeConfig["lights"] as! Bool
     }
@@ -59,10 +57,11 @@ class StopAlarmViewController: UIViewController, CLLocationManagerDelegate{
 
     @IBAction func stopPressed(sender: UIButton) {
         HKWControlHandler.sharedInstance().stop()
-        appDelegate.appendToQueue(greetingURL)
-        appDelegate.playFromQueue()
+        
+        var lat: CLLocationDegrees
+        var long: CLLocationDegrees
+        
         if weather==true {
-            println("weather is true")
             var currentLocation = CLLocation()
             if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedWhenInUse ||
                 CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways {
@@ -70,10 +69,21 @@ class StopAlarmViewController: UIViewController, CLLocationManagerDelegate{
             }
             
             var geoPoint = currentLocation.coordinate
-            PFCloud.callFunctionInBackground("getWeather", withParameters: ["latitude": geoPoint.latitude, "longitude": geoPoint.longitude], block: { (response, error) -> Void in
-                var weatherURL = response as! String
-                self.appDelegate.appendToQueue(weatherURL)
-            })
+            lat = geoPoint.latitude
+            long = geoPoint.longitude
+        } else {
+            lat = 0
+            long = 0
+        }
+        
+        PFCloud.callFunctionInBackground("getGreetingAndWeatherTTSURL", withParameters: ["weather": weather, "latitude": lat, "longitude": long]) { (response, error) -> Void in
+            if error == nil {
+                var ttsURL = response as! String
+                self.appDelegate.appendToQueue(ttsURL)
+                self.appDelegate.playFromQueue()
+            } else {
+                println(error)
+            }
         }
         if lights == true {
             PFCloud.callFunctionInBackground("turnOnLights", withParameters: nil, block: { (response, error) -> Void in
