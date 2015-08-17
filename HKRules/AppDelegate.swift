@@ -76,6 +76,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         
+        println("didRecieveRemoteNotification")
+        
         if !alreadyReacted {
             alreadyReacted = true
             println("Push notification received.")
@@ -160,6 +162,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
             //AlarmPlayingSingleton.sharedInstance.setAlarmPlaying(false)
         }
     }
+    
+    func appendToQueue(track: String) {
+        tracksQueue.append(track)
+    }
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -177,18 +183,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWPlayerEventHandlerDele
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-//        if AlarmPlayingSingleton.sharedInstance.getAlarmPlaying() {
-//            println("trying to show stop alarm view controller")
-//            var storyBoard = UIStoryboard(name: "Main", bundle: nil)
-//            var stopViewController = storyBoard.instantiateViewControllerWithIdentifier("StopAlarm") as! StopAlarmViewController
-//            var topController = self.window?.rootViewController
-//            while (topController?.presentedViewController != nil) {
-//                topController = topController?.presentedViewController
-//            }
-//            topController?.presentViewController(stopViewController, animated: true, completion: { () -> Void in
-//                println("it worked!")
-//            })
-//        }
     }
 
     func applicationWillTerminate(application: UIApplication) {

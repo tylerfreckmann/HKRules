@@ -8,14 +8,17 @@
 
 import UIKit
 import Parse
+import CoreLocation
 
-class StopAlarmViewController: UIViewController {
+class StopAlarmViewController: UIViewController, CLLocationManagerDelegate{
     
     var wakeConfig: PFObject!
     var greetingURL: String!
     var weather: Bool!
     var lights: Bool!
-    var tracksQueue: [String]!
+    var appDelegate: AppDelegate!
+    
+    let locationManager = CLLocationManager()
     
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -29,12 +32,16 @@ class StopAlarmViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         println("called viewDidLoad")
-        tracksQueue = [String]()
+        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         var user = PFUser.currentUser()!
         var optionalWakeConfig: AnyObject? = user["wakeConfig"]
         wakeConfig = optionalWakeConfig as! PFObject
-        wakeConfig.fetchInBackgroundWithTarget(self, selector: "populateData")
-        // Do any additional setup after loading the view.
+        HKWPlayerEventHandlerSingleton.sharedInstance().delegate = appDelegate
+        wakeConfig.fetch()
+        populateData()
+    
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,42 +54,31 @@ class StopAlarmViewController: UIViewController {
         greetingURL = wakeConfig["greetingURL"] as! String
         weather = wakeConfig["weather"] as! Bool
         lights = wakeConfig["lights"] as! Bool
-        tracksQueue.append(greetingURL)
-        if weather==true {
-            PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
-                if error == nil {
-                    PFCloud.callFunctionInBackground("getWeather", withParameters: ["latitude": geoPoint!.latitude, "longitude": geoPoint!.longitude], block: { (response, error) -> Void in
-                        println("response: \(response) error: \(error)")
-                    })
-                } else {
-                    println("error getting location")
-                }
-            })
-        }
     }
     
 
     @IBAction func stopPressed(sender: UIButton) {
         HKWControlHandler.sharedInstance().stop()
-    }
-    
-    func playFromQueue() {
-        if !HKWControlHandler.sharedInstance().isPlaying() {
-            let track = tracksQueue.removeAtIndex(0)
-            if track.hasPrefix("http") {
-                HKWControlHandler.sharedInstance().playStreamingMedia(track, withCallback: { (success) -> Void in
-                    println("PLAY FROM QUEUE \(track)? \(success)")
-                })
-            } else {
-                HKWControlHandler.sharedInstance().playCAF(NSURL(fileURLWithPath: track), songName: "", resumeFlag: false)
+        appDelegate.appendToQueue(greetingURL)
+        appDelegate.playFromQueue()
+        if weather==true {
+            println("weather is true")
+            var currentLocation = CLLocation()
+            if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedWhenInUse ||
+                CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways {
+                    currentLocation = locationManager.location
             }
+            
+            var geoPoint = currentLocation.coordinate
+            PFCloud.callFunctionInBackground("getWeather", withParameters: ["latitude": geoPoint.latitude, "longitude": geoPoint.longitude], block: { (response, error) -> Void in
+                var weatherURL = response as! String
+                self.appDelegate.appendToQueue(weatherURL)
+            })
         }
-    }
-    
-    func hkwPlayEnded() {
-        println("playing next song, track count: \(tracksQueue.count)")
-        if tracksQueue.count != 0 {
-            playFromQueue()
+        if lights == true {
+            PFCloud.callFunctionInBackground("turnOnLights", withParameters: nil, block: { (response, error) -> Void in
+                
+            })
         }
     }
     

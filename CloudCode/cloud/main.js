@@ -101,11 +101,9 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
 
     // Requests for the initial check TTS 
     Parse.Cloud.httpRequest({url: initialCheckURL}).then(function(initialCheckMP3) {
-        var requestEndPointURL = "https://graph.api.smartthings.com/api/smartapps/endpoints?access_token="
-            + user.get("sttoken");
         initialGreetingURL = initialCheckMP3.text;
         // Request for the endpoint URL
-        return Parse.Cloud.httpRequest({url: requestEndPointURL});
+        return getSmartThingsEndpointURL(user);
     }).then(function(endPointResponse) {
         var json = JSON.parse(endPointResponse.text);
         var endPointURL = json[0]["url"];
@@ -140,6 +138,13 @@ Parse.Cloud.define("prepareToLeaveHouse", function (request, response) {
         response.error(error);
     });
 });
+
+/* Helper function for getting SmartThings endpoint URL*/
+var getSmartThingsEndpointURL = function(user) {
+    var requestEndPointURL = "https://graph.api.smartthings.com/api/smartapps/endpoints?access_token="
+        + user.get("sttoken");
+    return Parse.Cloud.httpRequest({url: requestEndPointURL});
+}
 
 /* Helper function for getting the current time */
 var getCurrentTime = function() {
@@ -231,14 +236,19 @@ var getWeatherMsg = function(latitude, longitude) {
 /* Parse Cloud method for getting the weather forecast in String */ 
 Parse.Cloud.define("getWeather", function (request, response) {
     getWeatherMsg(request.params.latitude, request.params.longitude).then(function(weatherMessage) {
-        response.success(weatherMessage);
+        var ttsURL = baseSpeechURL+speechPadding+weatherMessage+"&return_url=1";
+        return Parse.Cloud.httpRequest({url: ttsURL});
+    }).then(function(httpResponse) {
+        response.success(httpResponse.text);
+    }, function(error) {
+        response.error("failed to get weatherMessage");
     });
 });
 
 /* After save method for transforming wake config greeting text into tts url*/
 Parse.Cloud.afterSave("WakeConfig", function(request) {
     var greeting = request.object.get("greeting");
-    if (greeting.search("http") != 0) {
+    if (greeting.length > 0) {
         greeting = greeting.split(" ").join("%20");
         var ttsURL = baseSpeechURL+speechPadding+greeting+"&return_url=1";
         Parse.Cloud.httpRequest({ url: ttsURL}).then(function(httpResponse) {
@@ -246,7 +256,27 @@ Parse.Cloud.afterSave("WakeConfig", function(request) {
         }).then(function(wakeConfig) {
             console.log("successfully transformed greeting");
         }, function(error) {
-            console.log("greeting transformation failed: " + error);
+            console.log("greeting transformation failed: " + error.message);
         });
     }
+});
+
+Parse.Cloud.define("turnOnLights", function(request, response) {
+    var user = Parse.User.current();
+    getSmartThingsEndpointURL(user).then(function(httpResponse) {
+        var json = JSON.parse(httpResponse.text);
+        var epURL = json[0]["url"];
+        var endpointURL = "https://graph.api.smartthings.com" + epURL + "/switches/on/0";
+        console.log(endpointURL);
+        return Parse.Cloud.httpRequest({
+            url: endpointURL,
+            headers: {
+                "Authorization": "Bearer "+user.get("sttoken")
+            }
+        });
+    }).then(function(httpResponse) {
+        response.success("successfully turned on lights");
+    }, function(error) {
+        response.error(error);
+    });
 });
