@@ -287,7 +287,13 @@ Parse.Cloud.define("getGreetingAndWeatherTTSURL", function(request, response) {
     wakeConfig.fetch().then(function(wakeConfig) {
         greeting = wakeConfig.get("greeting");
         greeting = greeting.split(" ").join("%20");
-        return getWeatherMsg(request.params.latitude, request.params.longitude);
+        if (request.params.weather) {
+            return getWeatherMsg(request.params.latitude, request.params.longitude);
+        } else {
+            var promise = new Parse.Promise();
+            promise.resolve("");
+            return promise;
+        }
     }).then(function(weatherMessage) {
         var ttsURL = baseSpeechURL+speechPadding+greeting+speechPadding+weatherMessage+"&return_url=1";
         return Parse.Cloud.httpRequest({url: ttsURL});
