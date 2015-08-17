@@ -280,3 +280,20 @@ Parse.Cloud.define("turnOnLights", function(request, response) {
         response.error(error);
     });
 });
+
+Parse.Cloud.define("getGreetingAndWeatherTTSURL", function(request, response) {
+    var user = Parse.User.current();
+    var greeting;
+    wakeConfig.fetch().then(function(wakeConfig) {
+        greeting = wakeConfig.get("greeting");
+        greeting = greeting.split(" ").join("%20");
+        return getWeatherMsg(request.params.latitude, request.params.longitude);
+    }).then(function(weatherMessage) {
+        var ttsURL = baseSpeechURL+speechPadding+greeting+speechPadding+weatherMessage+"&return_url=1";
+        return Parse.Cloud.httpRequest({url: ttsURL});
+    }).then(function(httpResponse) {
+        response.success(httpResponse.text);
+    }, function(error) {
+        response.error("failed to get greeting and weather message " +error.message);
+    });
+});
